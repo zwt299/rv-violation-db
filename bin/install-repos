@@ -3,7 +3,7 @@ echo "Removing Directory Of Existing Repos"
 rm -rf ./repos
 echo "Creating New Directory Of Repos"
 mkdir ./repos
-exec < violation-data.csv
+exec < repo-data.csv
 cd repos/
 read header
 while read line

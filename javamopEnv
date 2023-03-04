@@ -63,4 +63,5 @@ RUN \
   echo 'export CLASSPATH=${ASPECTJ_DIR}/lib/aspectjtools.jar:${ASPECTJ_DIR}/lib/aspectjrt.jar:${ASPECTJ_DIR}/lib/aspectjweaver.jar:${HOME}/rv-monitor/target/release/rv-monitor/lib/rv-monitor-rt.jar:${HOME}/rv-monitor/target/release/rv-monitor/lib/rv-monitor.jar:${CLASSPATH}' >> ~/.bashrc && \
   echo '===============Building a JavaMOP Java agent===========' && \
   echo 'In the image: ${HOME}/javamop-agent-bundle/README.txt' && \
-  echo '======================================================='
+  echo '=======================================================' && \
+  export PATH=$PATH":$HOME/rv-violation-db/bin"
