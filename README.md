@@ -15,7 +15,7 @@ Below are instructions while running in a Linux Shell.
 
 Run the following commands to start the docker environment: 
 1. Start the docker service (`service docker start`)
-2. `docker build -t rv-db:latest -< javamopEnv`
+2. `docker build --no-cache -t rv-db:latest -< javamopEnv`
 3. `docker run -it rv-db:latest`
 
 To get started inspecting data:
