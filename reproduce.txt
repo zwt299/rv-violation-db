@@ -1,0 +1,73 @@
+Using the dockerfile from https://github.com/owolabileg/javamop/blob/master/scripts/javamopDockerfile
+With the only change is the addition to cloning the repo I am working with
+
+
+I run the following commands
+
+`service docker start`
+`docker build --no-cache -t rv-db:latest -< javamopEnv`
+`docker run -it rv-db:latest`
+
+To setup the docker image for JavaMOP. 
+
+Then from that I run the following commands to install the
+custom javaparser
+
+`cd javamop/`
+`mvn clean`
+`bash scripts/install-javaparser.sh`
+`mvn package -Drat.skip -DskipTests`  #From the javamop directory
+
+
+I have a directory that has the extension for JavaMOP without
+having to modify the poms that I moved into the javamop folder
+(https://github.com/SoftEngResearch/code-pearls/blob/main/mop-extension/pom.xml)
+
+After loading docker I cd into the directory where the
+POM file for the extension is loaded to run
+`cd extension`
+`mvn package`
+(after running this it succeeds but I get a warning [INFO] --- maven-jar-plugin:2.4:jar (default-jar) @ mop-extension ---
+[WARNING] JAR will be empty - no content was marked for inclusion!)
+
+`mvn_dir=$(mvn -version | grep ^Maven | cut -d: -f2 | tr -d ' ')`
+`mkdir -p ${mvn_dir}/lib/ext`
+`cp target/mop-extension-1.0-SNAPSHOT.jar ${mvn_dir}/lib/ext`
+
+
+Then I try to run JavaMOP on a specific project
+
+`cd ~/javamop/scripts`
+`mkdir props-to-use`
+`cp props/Collections_SynchronizedCollection.mop props-to-use/`
+`cp props/Collection_UnsafeIterator.mop props-to-use/`
+`bash make-agent.sh props-to-use/ agents/ quiet`
+`mvn install:install-file -Dfile=agents/JavaMOPAgent.jar -DgroupId="javamop-agent" -DartifactId="javamop-agent" -Dversion="1.0" -Dpackaging="jar"`
+
+
+Then I clone the project that I am trying to run JavaMOP on
+c
+`git clone https://github.com/eclipse/jetty.project.git`
+`cd jetty.project/jetty-util`
+`git checkout df1f709ea2f883ffb7f0a87d63aac506ae3fedd5`
+`export RVMLOGGINGLEVEL=UNIQUE`
+`mvn test -Dtest=QueuedThreadPoolTest#testMaxStopTime -Denforcer.skip`
+
+Not sure why violations that I expected arent showing up here??
+
+Even if I try and modify the POM.xml file with the following 
+
+<plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-surefire-plugin</artifactId>
+      <version>2.16</version>
+      <configuration>
+        <argLine>-javaagent:${settings.localRepository}/javamop-agent/javamop-agent/1.0/javamop-agent-1.0.jar</argLine>
+      </configuration>
+</plugin>
+
+I seem to have issues with JavaMOP outputting anything. 
+
+
+
+
