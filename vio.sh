@@ -30,7 +30,7 @@ function setup_prop() {
     ###HANDLE SPECIFIC AGENTS###
     mkdir props-to-use/
     cp props/${PROPFILE} props-to-use/
-    bash make-agent.sh props/ agents/ quiet
+    bash make-agent.sh props-to-use/ agents/ quiet
 
     ###INSTALL JAVAMOPAGENT.JAR
     mvn install:install-file -Dfile=agents/JavaMOPAgent.jar -DgroupId="javamop-agent" -DartifactId="javamop-agent" -Dversion="1.0" -Dpackaging="jar"
@@ -83,7 +83,7 @@ while [ "$1" != "" ]; do
         echo $TEST_DIR
         echo $TEST
 
-                
+        setup_prop    
         setup_repo_and_test
         exit 0
         ;;
