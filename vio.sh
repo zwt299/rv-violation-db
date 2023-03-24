@@ -28,6 +28,7 @@ USAGE
 
 function setup_prop() {
     ###HANDLE SPECIFIC AGENTS###
+    cd ~/javamop-agent-bundle/
     mkdir props-to-use/
     cp props/${PROPFILE} props-to-use/
     bash make-agent.sh props-to-use/ agents/ quiet
@@ -45,7 +46,7 @@ function setup_repo_and_test() {
     mvn test -Dtest=$TEST -Denforcer.skip
     cp violation-counts ~/violations-data/violation-${VIO_ID}
 
-    cd ~/javamop-agent-bundle/
+    cd ~/rv-violation-db/
 }
 
 
@@ -55,7 +56,7 @@ if [ $# -eq 0 ]; then
     exit 1
 fi
 
-
+mkdir ~/violations-data/
 while [ "$1" != "" ]; do
     case $1 in
     --violation-id)

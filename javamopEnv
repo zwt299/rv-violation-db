@@ -68,4 +68,10 @@ RUN \
   echo 'In the image: ${HOME}/javamop-agent-bundle/README.txt' && \
   echo '======================================================='
 
-RUN echo $VIO_ID
+RUN echo "Installing JavaMOP extension" && \
+  cd rv-violation-db/ && \
+  bash install-extension.sh && \
+  cd ~/
+
+RUN echo "Reproducing Violation ${VIO_ID}"
+
