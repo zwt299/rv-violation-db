@@ -17,7 +17,7 @@ while [ "$1" != "" ]; do
     --violation-id)
         shift 
         VIO_ID=$1
-        docker build --no-cache -t test:latest --build-arg VIO_ID=$VIO_ID  -< javamopEnv
+        docker build --no-cache -t violation-$VIO_ID:latest --build-arg VIO_ID=$VIO_ID  -< javamopEnv
         exit 0
         ;;
     *)
