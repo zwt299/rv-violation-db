@@ -29,9 +29,9 @@ USAGE
 function setup_prop() {
     ###HANDLE SPECIFIC AGENTS###
     cd ~/javamop-agent-bundle/
-    mkdir props-to-use/
-    cp props/${PROPFILE} props-to-use/
-    bash make-agent.sh props-to-use/ agents/ quiet
+    # mkdir props-to-use/
+    # cp props/${PROPFILE} props-to-use/
+    bash make-agent.sh prop/ agents/ quiet
 
     ###INSTALL JAVAMOPAGENT.JAR
     mvn install:install-file -Dfile=agents/JavaMOPAgent.jar -DgroupId="javamop-agent" -DartifactId="javamop-agent" -Dversion="1.0" -Dpackaging="jar"
