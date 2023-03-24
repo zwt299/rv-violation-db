@@ -12,3 +12,17 @@ USAGE
     exit 1
 }
 
+while [ "$1" != "" ]; do
+    case $1 in
+    --violation-id)
+        shift 
+        VIO_ID=$1
+        docker build --no-cache -t test:latest --build-arg VIO_ID=$VIO_ID  -< javamopEnv
+        exit 0
+        ;;
+    *)
+        usage
+        exit 1
+        ;;
+    esac
+done
