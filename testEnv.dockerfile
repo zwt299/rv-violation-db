@@ -18,4 +18,5 @@ WORKDIR /home/mopuser/
 
 RUN \
     git clone https://github.com/zwt299/rv-violation-db.git && \
-    cd rv-violation-db/
+    cd rv-violation-db/ && \
+    bash find.sh --repo "$TAG"
