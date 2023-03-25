@@ -68,13 +68,13 @@ RUN \
   echo 'In the image: ${HOME}/javamop-agent-bundle/README.txt' && \
   echo '======================================================='
 
-RUN echo "Installing JavaMOP extension" && \
-  cd rv-violation-db/ && \
-  sudo bash install-extension.sh > install.txt && \
-  cd ~/
+# RUN echo "Installing JavaMOP extension" && \
+#   cd rv-violation-db/ && \
+#   sudo bash install-extension.sh > install.txt && \
+#   cd ~/
 
-RUN echo "Reproducing Violation ${VIO_ID}" && \
-   cd rv-violation-db/ && \
-   bash vio.sh --violation-id $VIO_ID > out.txt
+# RUN echo "Reproducing Violation ${VIO_ID}" && \
+#    cd rv-violation-db/ && \
+#    bash vio.sh --violation-id $VIO_ID > out.txt
 
 RUN touch ${VIO_ID}.txt
