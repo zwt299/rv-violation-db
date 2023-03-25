@@ -63,9 +63,10 @@ while [ "$1" != "" ]; do
     --violation-id)
         shift # remove `-t` or `--tag` from `$1`
         VIO_ID=$1
-        REPO_INFO=$(grep -w -E "\S+,\S+,\S+,$VIO_ID" ./data/repo-data.csv)
+        echo $VIO_ID
+        REPO_INFO=$(grep -w -E "\S+,\S+,\S+,$VIO_ID" ~rv-violation-db/data/repo-data.csv)
         echo "$REPO_INFO"
-        VIOLATION_INFO=$(grep -w -E "$VIO_ID,\S+,\S+,\S+" ./data/violation-spec-map.csv)
+        VIOLATION_INFO=$(grep -w -E "$VIO_ID,\S+,\S+,\S+" ~/rv-violation-db/data/violation-spec-map.csv)
         echo "$VIOLATION_INFO"
 
         # Set comma as delimiter

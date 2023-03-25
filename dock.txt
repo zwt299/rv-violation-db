@@ -1,0 +1,3 @@
+sudo docker run --name me -d -i -t violation-1:latest /bin/sh
+
+sudo docker exec -it me sudo bash ./rv-violation-db/install-extension.sh
