@@ -41,9 +41,9 @@ function setup_prop() {
 
 function setup_repo_and_test() {
 # Then Clone the Project that you are trying to work on
-    # git clone $REPO
+    git clone $REPO
     cd $TEST_DIR
-    # git checkout $SHA
+    git checkout $SHA
     echo $TEST
     mvn test -Dtest=${TEST} -Denforcer.skip
     cp violation-counts ~/violations-data/violation-${VIO_ID}
