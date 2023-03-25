@@ -70,7 +70,7 @@ RUN \
 
 RUN echo "Installing JavaMOP extension" && \
   cd rv-violation-db/ && \
-  bash install-extension.sh && \
+  bash install-extension.sh > install.txt && \
   cd ~/
 
 RUN echo "Reproducing Violation ${VIO_ID}"

@@ -29,8 +29,9 @@ USAGE
 function setup_prop() {
     ###HANDLE SPECIFIC AGENTS###
     cd ~/javamop-agent-bundle/
-    # mkdir props-to-use/
-    # cp props/${PROPFILE} props-to-use/
+    mkdir props-to-use/
+    cp props/${PROPFILE} props-to-use/
+    cp props/Object_NoClone.mop props-to-use/
     bash make-agent.sh props/ agents/ quiet
 
     ###INSTALL JAVAMOPAGENT.JAR
@@ -40,10 +41,11 @@ function setup_prop() {
 
 function setup_repo_and_test() {
 # Then Clone the Project that you are trying to work on
-    git clone $REPO
+    # git clone $REPO
     cd $TEST_DIR
-    git checkout $SHA
-    mvn test -Dtest=$TEST -Denforcer.skip
+    # git checkout $SHA
+    echo $TEST
+    mvn test -Dtest=${TEST} -Denforcer.skip
     cp violation-counts ~/violations-data/violation-${VIO_ID}
 
     cd ~/rv-violation-db/
