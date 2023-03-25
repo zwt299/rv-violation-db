@@ -32,7 +32,7 @@ function setup_prop() {
     mkdir props-to-use/
     cp props/${PROPFILE} props-to-use/
     cp props/Object_NoClone.mop props-to-use/
-    bash make-agent.sh props/ agents/ quiet
+    bash make-agent.sh props-to-use/ agents/ quiet
 
     ###INSTALL JAVAMOPAGENT.JAR
     mvn install:install-file -Dfile=agents/JavaMOPAgent.jar -DgroupId="javamop-agent" -DartifactId="javamop-agent" -Dversion="1.0" -Dpackaging="jar"
