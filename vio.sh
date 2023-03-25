@@ -42,7 +42,7 @@ function setup_prop() {
 function setup_repo_and_test() {
 # Then Clone the Project that you are trying to work on
     git clone $REPO
-    cd $TEST_DIR
+    cd ./$TEST_DIR
     git checkout $SHA
     echo $TEST
     mvn test -Dtest=${TEST} -Denforcer.skip
@@ -63,9 +63,9 @@ while [ "$1" != "" ]; do
     --violation-id)
         shift # remove `-t` or `--tag` from `$1`
         VIO_ID=$1
-        REPO_INFO=$(grep -w -E "\S+,\S+,\S+,$VIO_ID" data/repo-data.csv)
+        REPO_INFO=$(grep -w -E "\S+,\S+,\S+,$VIO_ID" ./data/repo-data.csv)
         echo "$REPO_INFO"
-        VIOLATION_INFO=$(grep -w -E "$VIO_ID,\S+,\S+,\S+" data/violation-spec-map.csv)
+        VIOLATION_INFO=$(grep -w -E "$VIO_ID,\S+,\S+,\S+" ./data/violation-spec-map.csv)
         echo "$VIOLATION_INFO"
 
         # Set comma as delimiter
