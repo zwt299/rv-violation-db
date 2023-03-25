@@ -28,6 +28,9 @@ RUN \
 # Set up user (mopuser)
 RUN useradd -ms /bin/bash -c "mopuser" mopuser && echo "mopuser:docker" | chpasswd && adduser mopuser sudo
 
+RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> \
+/etc/sudoers
+
 USER mopuser
 
 WORKDIR /home/mopuser/

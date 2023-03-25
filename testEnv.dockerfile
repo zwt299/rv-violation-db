@@ -6,6 +6,7 @@ RUN \
   apt-get install -y software-properties-common && \
 # Install Git
   apt-get install -y git && \
+  apt-get install -y sudo && \
 # Install python
   apt-get update
 
@@ -18,5 +19,6 @@ WORKDIR /home/mopuser/
 
 RUN \
     git clone https://github.com/zwt299/rv-violation-db.git && \
-    cd rv-violation-db/ && \
-    bash find.sh --repo "$TAG"
+
+
+ENTRYPOINT []
