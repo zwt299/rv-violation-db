@@ -75,6 +75,6 @@ RUN echo "Installing JavaMOP extension" && \
   sudo bash ~/rv-violation-db/extension.sh && \
   cd ~/
 
-# RUN echo "Reproducing Violation ${VIO_ID}" && \
-#    cd rv-violation-db/ && \
-#    bash vio.sh --violation-id $VIO_ID > out.txt
+RUN echo "Reproducing Violation ${VIO_ID}" && \
+   cd rv-violation-db/ && \
+   bash vio.sh --violation-id $VIO_ID > out.txt
