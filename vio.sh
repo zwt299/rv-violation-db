@@ -28,21 +28,21 @@ USAGE
 
 function setup_prop() {
     ###HANDLE SPECIFIC AGENTS###
-    cd ~/javamop-agent-bundle/
-    mkdir props-to-use/
-    cp props/${PROPFILE} props-to-use/
+    mkdir ~/javamop-agent/bundle/props-to-use/
+    cp ~/javamop-agent-bundle/props/${PROPFILE} ~/javamop-agent-bundle/props-to-use/
     cp props/Object_NoClone.mop props-to-use/
-    bash make-agent.sh props-to-use/ agents/ quiet
+    bash make-agent.sh ~/javamop-agent-bundle/props-to-use/ ~/javamop-agent-bundle/agents/ quiet
 
     ###INSTALL JAVAMOPAGENT.JAR
-    mvn install:install-file -Dfile=agents/JavaMOPAgent.jar -DgroupId="javamop-agent" -DartifactId="javamop-agent" -Dversion="1.0" -Dpackaging="jar"
+    mvn install:install-file -Dfile=~/javamop-agent-bundle/agents/JavaMOPAgent.jar -DgroupId="javamop-agent" -DartifactId="javamop-agent" -Dversion="1.0" -Dpackaging="jar"
     export RVMLOGGINGLEVEL=UNIQUE
 }
 
 function setup_repo_and_test() {
 # Then Clone the Project that you are trying to work on
+    cd ~/javamop-agent-bundle/
     git clone $REPO
-    cd ./$TEST_DIR
+    cd ~/javamop-agent-bundle/$TEST_DIR
     git checkout $SHA
     echo $TEST
     mvn test -Dtest=${TEST} -Denforcer.skip
@@ -64,7 +64,7 @@ while [ "$1" != "" ]; do
         shift # remove `-t` or `--tag` from `$1`
         VIO_ID=$1
         echo $VIO_ID
-        REPO_INFO=$(grep -w -E "\S+,\S+,\S+,$VIO_ID" ~rv-violation-db/data/repo-data.csv)
+        REPO_INFO=$(grep -w -E "\S+,\S+,\S+,$VIO_ID" ~/rv-violation-db/data/repo-data.csv)
         echo "$REPO_INFO"
         VIOLATION_INFO=$(grep -w -E "$VIO_ID,\S+,\S+,\S+" ~/rv-violation-db/data/violation-spec-map.csv)
         echo "$VIOLATION_INFO"
