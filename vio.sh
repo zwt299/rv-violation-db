@@ -33,9 +33,11 @@ function setup_prop() {
     cp ~/javamop-agent-bundle/props/Object_NoClone.mop ~/javamop-agent-bundle/props-to-use/
     bash ~/javamop-agent-bundle/make-agent.sh ~/javamop-agent-bundle/props-to-use/ ~/javamop-agent-bundle/agents/ quiet
 
+    cd ~/javamop-agent-bundle/
     ###INSTALL JAVAMOPAGENT.JAR
     mvn install:install-file -Dfile=agents/JavaMOPAgent.jar -DgroupId="javamop-agent" -DartifactId="javamop-agent" -Dversion="1.0" -Dpackaging="jar"
     export RVMLOGGINGLEVEL=UNIQUE
+    cd ~/
 }
 
 function setup_repo_and_test() {
