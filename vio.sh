@@ -28,13 +28,13 @@ USAGE
 
 function setup_prop() {
     ###HANDLE SPECIFIC AGENTS###
-    mkdir ~/javamop-agent/bundle/props-to-use/
+    mkdir ~/javamop-agent-bundle/props-to-use/
     cp ~/javamop-agent-bundle/props/${PROPFILE} ~/javamop-agent-bundle/props-to-use/
-    cp props/Object_NoClone.mop props-to-use/
+    cp ~/javamop-agent-bundle/props/Object_NoClone.mop ~/javamop-agent-bundle/props-to-use/
     bash make-agent.sh ~/javamop-agent-bundle/props-to-use/ ~/javamop-agent-bundle/agents/ quiet
 
     ###INSTALL JAVAMOPAGENT.JAR
-    mvn install:install-file -Dfile=~/javamop-agent-bundle/agents/JavaMOPAgent.jar -DgroupId="javamop-agent" -DartifactId="javamop-agent" -Dversion="1.0" -Dpackaging="jar"
+    mvn install:install-file -Dfile=agents/JavaMOPAgent.jar -DgroupId="javamop-agent" -DartifactId="javamop-agent" -Dversion="1.0" -Dpackaging="jar"
     export RVMLOGGINGLEVEL=UNIQUE
 }
 
