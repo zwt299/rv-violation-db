@@ -1,28 +1,14 @@
-#!bin/bash
-function usage() {
-    cat <<USAGE
-    Usage: $0 --violation-id [id]
+#!/bin/bash
 
-    Options:
-        --repo-id [id]:            find all violations of a given repo ID [id]
-        --violation-id [id]:       find a given violation ID [id]
-        --prop-file [prop-file]:   find all violations for a given prop-file
+if [[ $1 == "" ]]; then
+    echo "arg1 - vio-id"
+    exit
+fi
 
-USAGE
-    exit 1
-}
+VIO_ID=$1
 
-while [ "$1" != "" ]; do
-    case $1 in
-    --violation-id)
-        shift 
-        VIO_ID=$1
-        docker build --no-cache -t violation-$VIO_ID:latest --build-arg VIO_ID=$VIO_ID  -< javamopEnv
-        exit 0
-        ;;
-    *)
-        usage
-        exit 1
-        ;;
-    esac
-done
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
+
+
+image=violation-${VIO_ID}:latest
+docker run -t --rm -v ${SCRIPT_DIR}:/Scratch ${image} /bin/bash -x /Scratch/run_entrypoint.sh ${VIO_ID} &> log.txt
