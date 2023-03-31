@@ -1,0 +1,7 @@
++ SCRIPT_USERNAME=mopuser
++ TOOL_REPO=rv-violation-db
++ [[ 1 == '' ]]
++ VIO_ID=1
++ script_to_run='/home/mopuser/rv-violation-db/vio.sh 1'
++ su - mopuser -c '/home/mopuser/rv-violation-db/vio.sh 1'
+Password: 
