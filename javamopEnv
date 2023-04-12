@@ -72,4 +72,4 @@ RUN \
   echo 'In the image: ${HOME}/javamop-agent-bundle/README.txt' && \
   echo '======================================================='
 
-# RUN ["/bin/bash", "-c", "source ~/.bashrc && sudo bash /home/mopuser/rv-violation-db/extension.sh bash /home/mopuser/rv-violation-db/run_entrypoint.sh ${VIO_ID}"]
+RUN ["/bin/bash", "-c", "source ~/.bashrc && cp /home/mopuser/rv-violation-db/extension/target/mop-extension-1.0-SNAPSHOT.jar ~/apache-maven/lib/ext && ls ~/apache-maven/lib/ext && bash /home/mopuser/rv-violation-db/run_entrypoint.sh ${VIO_ID}"] 

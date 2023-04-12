@@ -12,6 +12,6 @@ if [[ $1 == "" ]]; then
 fi
 
 VIO_ID=$1
-docker build -t violation-${VIO_ID}:latest --build-arg VIO_ID=$VIO_ID  -< javamopEnv #dockerEnv.dockerfile #javamopEnv
+docker build --no-cache -t violation-${VIO_ID}:latest --build-arg VIO_ID=$VIO_ID  -< javamopEnv #dockerEnv.dockerfile #javamopEnv
 #--no-cache
 exit 0
