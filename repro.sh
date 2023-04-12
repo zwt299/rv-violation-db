@@ -6,8 +6,6 @@ if [[ $1 == "" ]]; then
 fi
 
 
-source ~/.bashrc && cp /home/mopuser/rv-violation-db/extension/target/mop-extension-1.0-SNAPSHOT.jar ~/apache-maven/lib/ext
-
 VIO_ID=$1
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
