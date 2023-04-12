@@ -16,6 +16,6 @@ VIO_ID=$1
 script_to_run="/home/$SCRIPT_USERNAME/$TOOL_REPO/vio.sh ${VIO_ID}"
 
 
-source ~/.bashrc && cp /home/mopuser/rv-violation-db/extension/target/mop-extension-1.0-SNAPSHOT.jar ~/apache-maven/lib/ext
+source ~/.bashrc
 
 bash $script_to_run

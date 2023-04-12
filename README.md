@@ -18,8 +18,6 @@ Run the following commands to start the docker environment:
 2. `docker build --no-cache -t rv-db:latest -< javamopEnv`
 3. `docker run -it rv-db:latest`
 
-To get started inspecting data:
-1. Run: `bash install-repos.sh` which will get the existing repos that our database curates.
 
 
 
