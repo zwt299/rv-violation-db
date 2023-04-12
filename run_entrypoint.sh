@@ -15,4 +15,4 @@ VIO_ID=$1
 
 script_to_run="/home/$SCRIPT_USERNAME/$TOOL_REPO/vio.sh ${VIO_ID}"
 
-su - "$SCRIPT_USERNAME" -c "$script_to_run"
+bash $script_to_run
