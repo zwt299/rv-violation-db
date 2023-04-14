@@ -1,7 +1,4 @@
 FROM ubuntu:18.04
-ARG VIO_ID
-ARG REPO_ID
-ARG SPEC_NAME
 
 RUN \
   apt-get update && \
