@@ -1,2 +1,4 @@
 Violation ID,Prop,TestDirectory,Test,Notes
 1,Collection_UnsafeIterator.mop,jetty.project/jetty-util,QueuedThreadPoolTest#testMaxStopTime,N/A
+2,Collections_SynchronizedCollection.mop,jetty.project/jetty-util,QueuedThreadPoolTest#testMaxStopTime,N/A
+3,Collection_UnsafeIterator.mop,,,N/A
