@@ -12,5 +12,11 @@ if [[ $1 == "" ]]; then
 fi
 
 VIO_ID=$1
+
+if [[ $2 == "no-cache" ]]; then
+    docker build --no-cache --build-arg VIO_ID=$VIO_ID -t violation-${VIO_ID}:latest -< javamopEnv # may need to add --no-cache if you dont want to cache image
+    exit 0
+fi
+
 docker build --build-arg VIO_ID=$VIO_ID -t violation-${VIO_ID}:latest -< javamopEnv # may need to add --no-cache if you dont want to cache image
 exit 0
