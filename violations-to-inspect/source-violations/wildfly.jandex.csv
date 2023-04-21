@@ -1,0 +1,9 @@
+org.jboss.jandex.test.DotNameTestCase#testIsComponentized,
+org.jboss.jandex.test.AnnotationInstanceFilterTestCase#testFilter,
+org.jboss.jandex.test.CompositeTestCase#testComposite,Iterator_HasNext@org.jboss.jandex.CompositeIndex.getAllKnownSubClasses(CompositeIndex.java:107),Iterator_HasNext@org.jboss.jandex.Index.getAllKnownSubClasses(Index.java:108)
+org.jboss.jandex.test.BasicTestCase#testHasNoArgsConstructor,
+org.jboss.jandex.test.BasicTestCase#testIndexer,
+org.jboss.jandex.test.TypeAnnotationTestCase#testIndexer,
+org.jboss.jandex.test.BasicTestCase#testWriteReadPreviousVersion,
+org.jboss.jandex.test.BasicTestCase#testWriteRead,
+org.jboss.jandex.test.TypeAnnotationTestCase#testReadWrite,
