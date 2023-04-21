@@ -74,7 +74,7 @@ function process_vio_id() {
     echo $TEST_DIR
     echo $TEST
 
-    #process 
+    process 
 }
 
 GRANULARITY="all"
@@ -122,42 +122,44 @@ echo $GRANULARITY
 echo $GRANULARITY_VALUE
 echo $NUM_RERUNS
 
-if [[ $GRANULARITY == "repo-slug"]]; then
+if [[ $GRANULARITY == "repo-slug" ]]; then
     REPO_SLUG=$GRANULARITY_VALUE
     result=$(grep -w -E "\S+,$REPO_SLUG,\S+,\S+" ~/rv-violation-db/data/repo-data.csv)
     
     IFS=','
     #Read the split words into an array based on comma delimiter
     while read -a line; do 
-        process_vio_id "${line[1]}"
+        process_vio_id "${line[0]}"
     done <<< "$result"
     exit 0
 fi
 
-if [[ $GRANULARITY == "violation-id"]]; then
+if [[ $GRANULARITY == "violation-id" ]]; then
     VIO_ID=$GRANULARITY_VALUE
     result=$(grep -w -E "$VIO_ID,\S+,\S+,\S+" ~/rv-violation-db/data/repo-data.csv)
+    echo $result
     IFS=','
     #Read the split words into an array based on comma delimiter
     while read -a line; do 
-        process_vio_id "${line[1]}"
+        process_vio_id "${line[0]}"
     done <<< "$result"
 fi
 
-if [[ $GRANULARITY == "prop-file"]]; then
+if [[ $GRANULARITY == "prop-file" ]]; then
     PROP_FILE=$GRANULARITY_VALUE
-    result=$(grep -w -E "\S+,$PROP_FILE,\S+,\S+" data/violation-spec-map.csv)
+    result=$(grep -w -E "\S+,$PROP_FILE,\S+,\S+" ~/rv-violation-db/data/violation-spec-map.csv)
     IFS=','
     #Read the split words into an array based on comma delimiter
     while read -a line; do 
-        process_vio_id "${line[1]}"
+        process_vio_id "${line[0]}"
     done <<< "$result"
 fi
 
-if [[ $GRANULARITY == "all"]]; then
+if [[ $GRANULARITY == "all" ]]; then
     result=$(grep -w -E "^[0-9]+,\S+,\S+,\S+" ~/rv-violation-db/data/repo-data.csv)
+    IFS=','
     while read -a line; do 
-        process_vio_id "${line[1]}"
+        process_vio_id "${line[0]}"
     done <<< "$result"
 fi
 
