@@ -23,7 +23,7 @@ function setup_prop() {
 function setup_repo_and_test() {
 # Then Clone the Project that you are trying to work on
     cd ~/javamop-agent-bundle/
-    git clone $REPO
+    git clone https://github.com/$SLUG
     cd ~/javamop-agent-bundle/$TEST_DIR
     git checkout $SHA
     echo $TEST
@@ -43,7 +43,7 @@ mkdir ~/violations-data/
 
 VIO_ID=$1
 echo $VIO_ID
-REPO_INFO=$(grep -w -E "\S+,\S+,\S+,$VIO_ID" ~/rv-violation-db/data/repo-data.csv)
+REPO_INFO=$(grep -w -E "$VIO_ID,\S+,\S+,\S+" ~/rv-violation-db/data/repo-data.csv)
 echo "$REPO_INFO"
 VIOLATION_INFO=$(grep -w -E "$VIO_ID,\S+,\S+,\S+" ~/rv-violation-db/data/violation-spec-map.csv)
 echo "$VIOLATION_INFO"
@@ -52,10 +52,14 @@ echo "$VIOLATION_INFO"
 IFS=','
 #Read the split words into an array based on comma delimiter
 read -a strarr <<< "$REPO_INFO"
-REPO="${strarr[0]}"
-SHA="${strarr[1]}"
-echo $REPO
+VIO_ID="${strarr[0]}"
+SLUG="${strarr[1]}"
+SHA="${strarr[2]}"
+NOTES_DATA="${strarr[3]}"
+
+echo $SLUG
 echo $SHA
+
 read -a strarr <<< "$VIOLATION_INFO"
 PROPFILE="${strarr[1]}"
 TEST_DIR="${strarr[2]}"
