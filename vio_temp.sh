@@ -1,3 +1,17 @@
+#!bin/bash 
+
+function usage() {
+    cat <<USAGE
+    Usage: $0 --repo-id [id] | --violation-id [id] | --prop-file [prop-file]
+
+    Options:
+        --repo-id [id]:            find all violations of a given repo ID [id]
+        --violation-id [id]:       find a given violation ID [id]
+        --prop-file [prop-file]:   find all violations for a given prop-file
+USAGE
+    exit 1
+}
+
 
 function setup_prop() {
     ###HANDLE SPECIFIC AGENTS###
@@ -23,15 +37,6 @@ function setup_all_props() {
     cd ~/
 }
 
-function process() {
-    if [$PROPFILE=""]; then
-        setup_all_props
-    else
-        setup_prop
-    fi  
-    setup_repo_and_test
-}
-
 function setup_repo_and_test() {
 # Then Clone the Project that you are trying to work on
     cd ~/javamop-agent-bundle/
@@ -47,6 +52,15 @@ function setup_repo_and_test() {
     
     cp violation-counts ~/violations-data/violation-${VIO_ID}
     cd ~/rv-violation-db/
+}
+
+function process() {
+    if [$PROPFILE=""]; then
+        setup_all_props
+    else
+        setup_prop
+    fi  
+    setup_repo_and_test
 }
 
 function process_vio_id() {
@@ -65,7 +79,6 @@ function process_vio_id() {
     SHA="${strarr[1]}"
     echo $SLUG
     echo $SHA
-    
     read -a strarr <<< "$VIO_INFO"
     PROPFILE="${strarr[1]}"
     TEST_DIR="${strarr[2]}"
@@ -74,90 +87,52 @@ function process_vio_id() {
     echo $TEST_DIR
     echo $TEST
 
-    #process 
+    process 
 }
 
-GRANULARITY="all"
-GRANULARITY_VALUE=-1
-NUM_RERUNS=10
+mkdir ~/violations-data/
 
-
+array=()
 while [ "$1" != "" ]; do
     case $1 in
-    --repo-slug)
-        shift
-        GRANULARITY="repo-slug"
-        GRANULARITY_VALUE=$1
+    --repo-id)
+        shift 
+        REPO=$1
+        result=$(grep -w -E "\S+,\S+,$REPO,\S+" ~/rv-violation-db/data/repo-data.csv)
+        # echo "$result"
+        ###LOGIC FOR HANDLING ALL OF THE SAME REPO
+        # Set comma as delimiter
+        IFS=','
+        #Read the split words into an array based on comma delimiter
+        while read -a line; do 
+            process "${line[3]}"
+        done <<< "$result"
+        exit 0
         ;;
     --violation-id)
         shift
-        if ! [[ $1 =~ $re ]] ; then
-            echo "Error: violation-id not a number" >&2; exit 1
-        fi
-        GRANULARITY="violation-id"
-        GRANULARITY_VALUE=$1
+        VIO_ID=$1
+        process $VIO_ID
+        exit 0
         ;;
     --prop-file)
         shift
-        GRANULARITY="prop-file"
-        GRANULARITY_VALUE=$1
+        ###LOGIC FOR HANDLING ALL SPECS OF A GIVEN PROP FILE
+        PROP=$1
+        result=$(grep -w -E "\S+,$PROP,\S+,\S+" data/violation-spec-map.csv)
+        echo "$result"
+
+        process_all "${array[@]}"
+        exit 0
         ;;
-    --all)
-        GRANULARITY="all"
-        GRANULARITY_VALUE=-1
+    -h | --help)
+        usage # run usage function
         ;;
-    --num-reruns)
-        shift
-        re='^[0-9]+$'
-        if ! [[ $1 =~ $re ]] ; then
-            echo "Error: num-reruns not a number" >&2; exit 1
-        fi
-        NUM_RERUNS=$1
+    *)
+        usage
+        exit 1
         ;;
     esac
-    shift
 done
 
-echo $GRANULARITY
-echo $GRANULARITY_VALUE
-echo $NUM_RERUNS
-
-if [[ $GRANULARITY == "repo-slug"]]; then
-    REPO_SLUG=$GRANULARITY_VALUE
-    result=$(grep -w -E "\S+,$REPO_SLUG,\S+,\S+" ~/rv-violation-db/data/repo-data.csv)
-    
-    IFS=','
-    #Read the split words into an array based on comma delimiter
-    while read -a line; do 
-        process_vio_id "${line[1]}"
-    done <<< "$result"
-    exit 0
-fi
-
-if [[ $GRANULARITY == "violation-id"]]; then
-    VIO_ID=$GRANULARITY_VALUE
-    result=$(grep -w -E "$VIO_ID,\S+,\S+,\S+" ~/rv-violation-db/data/repo-data.csv)
-    IFS=','
-    #Read the split words into an array based on comma delimiter
-    while read -a line; do 
-        process_vio_id "${line[1]}"
-    done <<< "$result"
-fi
-
-if [[ $GRANULARITY == "prop-file"]]; then
-    PROP_FILE=$GRANULARITY_VALUE
-    result=$(grep -w -E "\S+,$PROP_FILE,\S+,\S+" data/violation-spec-map.csv)
-    IFS=','
-    #Read the split words into an array based on comma delimiter
-    while read -a line; do 
-        process_vio_id "${line[1]}"
-    done <<< "$result"
-fi
-
-if [[ $GRANULARITY == "all"]]; then
-    result=$(grep -w -E "^[0-9]+,\S+,\S+,\S+" ~/rv-violation-db/data/repo-data.csv)
-    while read -a line; do 
-        process_vio_id "${line[1]}"
-    done <<< "$result"
-fi
-
+exit 0

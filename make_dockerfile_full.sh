@@ -11,6 +11,16 @@ if [[ $1 == "" ]]; then
     exit 1
 fi
 
-NAME=$1
-docker build --no-cache -t ${NAME} -< javamopEnv # may need to add --no-cache if you dont want to cache image
+GRANULARITY=$1
+GRANULARITY_VALUE=$2
+NUM_RERUNS=$3
+IMAGE_NAME=$4
+CACHED=$5
+
+if [[ CACHED == "no" ]]; then 
+    docker build --no-cache --build-arg GRANULARITY=$GRANULARITY --build-arg GRANULARITY_VALUE=$GRANULARITY_VALUE --build-arg NUM_RERUNS=$NUM_RERUNS -t ${IMAGE_NAME} -< javamopEnvFull 
+    exit 0
+fi
+
+docker build --no-cache --build-arg GRANULARITY=$GRANULARITY --build-arg GRANULARITY_VALUE=$GRANULARITY_VALUE --build-arg NUM_RERUNS=$NUM_RERUNS -t ${IMAGE_NAME} -< javamopEnvFull 
 exit 0
