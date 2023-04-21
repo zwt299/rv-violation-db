@@ -1,17 +1,16 @@
-# Takes in violation CSV in specified format, and outputs CSV with only
-# validated entries. Entries are validated if:
-# - the test successfully runs
-# - the test output is deterministic for TEST_RUN runs (current: 5)
-# - the test output violates the specified property in the input csv
-#
-# An appropriate error message will be output for every input entry that cannot 
-# be validated.
+#!/bin/bash
 
-TEST_RUN=5
+ENTRY_CSV=$1
 
-#csv: project, project url, prop, test directory, test file, classification, notes
-INPUT_VIOS=$1
+# temp arg for testing
+LINE_NUMBER=$2
 
 NAME="validate"
-bash make_dockerfile_full.sh ${NAME}
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
+
+bash make_dockerfile.sh ${NAME}
+image=violation-${NAME}:latest
+docker run -t --rm -v ${SCRIPT_DIR}:/Scratch ${image} /bin/bash -x /Scratch/validate_entrypoint.sh ${ENTRY_CSV} ${LINE_NUMBER} &> validate_log.txt
+
+
 
