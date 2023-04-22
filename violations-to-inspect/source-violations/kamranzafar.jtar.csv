@@ -1,0 +1,8 @@
+org.kamranzafar.jtar.JTarTest#fileEntry,
+org.kamranzafar.jtar.JTarTest#untarTarFileDefaultSkip,
+org.kamranzafar.jtar.JTarTest#untarTGzFile,
+org.kamranzafar.jtar.JTarTest#testOffset,
+org.kamranzafar.jtar.JTarTest#untarTarFile,
+org.kamranzafar.jtar.JTarAppendTest#testAppend,OutputStream_ManipulateAfterClose@org.kamranzafar.jtar.TarOutputStream.close(TarOutputStream.java:71),OutputStream_ManipulateAfterClose@org.kamranzafar.jtar.TarOutputStream.pad(TarOutputStream.java:158)
+org.kamranzafar.jtar.JTarTest#tar,OutputStream_ManipulateAfterClose@org.kamranzafar.jtar.TarOutputStream.close(TarOutputStream.java:71),OutputStream_ManipulateAfterClose@org.kamranzafar.jtar.TarOutputStream.pad(TarOutputStream.java:158)
+org.kamranzafar.jtar.JTarAppendTest#testSingleOperation,OutputStream_ManipulateAfterClose@org.kamranzafar.jtar.TarOutputStream.close(TarOutputStream.java:71),OutputStream_ManipulateAfterClose@org.kamranzafar.jtar.TarOutputStream.pad(TarOutputStream.java:158)

@@ -1,0 +1,9 @@
+org.jboss.jandex.test.DotNameTestCase#testIsComponentized,
+org.jboss.jandex.test.AnnotationInstanceFilterTestCase#testFilter,
+org.jboss.jandex.test.CompositeTestCase#testComposite,
+org.jboss.jandex.test.BasicTestCase#testHasNoArgsConstructor,
+org.jboss.jandex.test.BasicTestCase#testIndexer,
+org.jboss.jandex.test.TypeAnnotationTestCase#testIndexer,
+org.jboss.jandex.test.BasicTestCase#testWriteReadPreviousVersion,ByteArrayOutputStream_FlushBeforeRetrieve@org.jboss.jandex.test.BasicTestCase.testWriteReadPreviousVersion(BasicTestCase.java:153)
+org.jboss.jandex.test.BasicTestCase#testWriteRead,ByteArrayOutputStream_FlushBeforeRetrieve@org.jboss.jandex.test.BasicTestCase.testWriteRead(BasicTestCase.java:138)
+org.jboss.jandex.test.TypeAnnotationTestCase#testReadWrite,ByteArrayOutputStream_FlushBeforeRetrieve@org.jboss.jandex.test.TypeAnnotationTestCase.testReadWrite(TypeAnnotationTestCase.java:59)
