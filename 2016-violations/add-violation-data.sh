@@ -7,8 +7,10 @@
 INSPECTIONS=$1
 #id, project, project url, SHA
 SUBJECTS=$2
-#project, project url, SHA, prop, test directory, test file, classification, notes
-OUT=$3
+#Violation_ID, Project_SLUG, SHA, Notes
+REPO_DATA=$3
+#Violation_ID, Propfile, TestDirectory, Test, ViolationFile, LineNum, Classification, Notes
+VIOLATION_SPEC_MAP=$4
 
 declare -A repo_info_by_proj
 
@@ -17,48 +19,55 @@ function initRepoInfo {
 
   while read id proj proj_url SHA 
   do 
-    if [[ ! -v "repo_info_by_proj[$proj]" ]]
-    then
-      repo_info_by_proj[$proj]="$proj_url,$SHA"
-    fi
-  done < <(cat $SUBJECTS)
-}
+    slug=$(echo $proj_url | sed 's/^https:[/][/]github[.]com[/]\(\S*\)$/\1/' )
 
-function getTestName {
-  
+    repo_not_found=$(yes | git ls-remote git@github.com:$slug 2>&1 | grep -c "ERROR: Repository not found.")
+    if [[ $repo_not_found -ne 0 ]]; then 
+      echo "WARNING: Repository at $slug not found...Skipping"
+      continue
+    fi 
+
+    repo_info_by_proj[$proj]="$slug,$SHA"
+ 
+  done < <(cat $SUBJECTS)
 }
 
 initRepoInfo
 
-# TODO:
-# clone each repo 
-# to get name of specific test:
-  # run java file with path to test file and line number 
-  # (will need to be extracted from inspections)
-
 IFS=","
 
-HEADER="project,project url,SHA,prop,test directory,test file,test line number,classification,notes"
-echo $HEADER > $OUT
+NEXT_VIO_ID=$(tail -n 1 $VIOLATION_SPEC_MAP | cut -d "," -f 1)
+(( NEXT_VIO_ID++ ))
+
+echo -e -n "\n" >> $REPO_DATA
+echo -e -n "\n" >> $VIOLATION_SPEC_MAP
 
 while read vio_id proj_id proj test_path prop classification
 do
-  # ignore violations that are not classified as Falsealarm or Truebug
-  if [ classification == "HardToInspect" ] 
-  then 
+  # skip automatically mined specs
+  if [[ $prop =~ FSM* ]]; then 
     continue
   fi
 
   read -a repo_info <<< ${repo_info_by_proj[$proj]}
-  proj_url=${repo_info[0]}
+  slug=${repo_info[0]}
   SHA=${repo_info[1]}
 
-  test_dir=$(dirname $test_path)
-  base_test_file=$(basename $test_path)
-  test_filename=$(echo $base_test_file | sed 's/.java:[0-9]*//')
-  test_linenumber=$(echo $base_test_file | sed 's/^.*.java:\([0-9]*\)$/\1/')
+  if [[ ! -v "repo_info_by_proj[$proj]" ]]; then 
+    echo "Skipping violation -- $proj does not have a valid github link."
+    continue
+  fi
 
-  echo "$proj,$proj_url,$SHA,$prop.mop,$test_dir,$test_filename,$test_linenumber,$classification,N/A" >> $OUT
-  
-  # echo "$shft_vio_id,$prop,$test_dir,$test_file,$classification,N/A" > $OUT
+  base_test_file=$(basename $test_path)
+  linenum=$(echo $base_test_file | sed 's/^.*.java:\([0-9]*\)$/\1/')
+  repo_name=$(echo $proj_url | sed 's/^.*[/]\(\S*\).git$/\1/')
+
+  #Violation_ID, Project_SLUG, SHA, Notes
+  echo "$NEXT_VIO_ID,$slug,$SHA,N/A" >> $REPO_DATA
+
+  #Violation_ID, Propfile, TestDirectory, Test, ViolationFile, LineNum, Classification, Notes
+  echo "$NEXT_VIO_ID,$prop.mop,,,$test_path,$linenum,$classification,N/A" >> $VIOLATION_SPEC_MAP
+
+  (( NEXT_VIO_ID++ ))
+
 done < $INSPECTIONS

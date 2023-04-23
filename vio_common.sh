@@ -42,13 +42,6 @@ function setup_repo_and_test() {
 }
 
 function process() {
-    # REPO=$1 
-    # SHA=$2 
-    # PROPFILE=$3 
-    # TEST_DIR=$4
-    # TEST=$5
-    # TEST_LINE_NUM=$6
-
     if [$PROPFILE=""]; then
         setup_all_props
     else

@@ -7,3 +7,5 @@
 2 - Refactor to handle different csv format?
 
 3 - Populate Dataset
+
+4 - (maybe) write script to remove violations that cannot be validated
