@@ -12,25 +12,25 @@ function execute_script() {
     bash $script_to_run
 }
 
-if [[ $GRANULARITY == "repo-slug"]]; then
+if [[ $GRANULARITY == "repo-slug" ]]; then
     script_to_run="/home/$SCRIPT_USERNAME/$TOOL_REPO/vio_full.sh --repo-slug $GRANULARITY_VALUE --num-reruns $NUM_RERUNS"
     execute_script
     exit 0
 fi
 
-if [[ $GRANULARITY == "violation-id"]]; then
+if [[ $GRANULARITY == "violation-id" ]]; then
     script_to_run="/home/$SCRIPT_USERNAME/$TOOL_REPO/vio_full.sh --violation-id $GRANULARITY_VALUE --num-reruns $NUM_RERUNS"
     execute_script
     exit 0
 fi
 
-if [[ $GRANULARITY == "prop-file"]]; then
+if [[ $GRANULARITY == "prop-file" ]]; then
     script_to_run="/home/$SCRIPT_USERNAME/$TOOL_REPO/vio_full.sh --prop-file $GRANULARITY_VALUE --num-reruns $NUM_RERUNS"
     execute_script
     exit 0
 fi
 
-if [[ $GRANULARITY == "all"]]; then
+if [[ $GRANULARITY == "all" ]]; then
     script_to_run="/home/$SCRIPT_USERNAME/$TOOL_REPO/vio_full.sh --all --num-reruns $NUM_RERUNS"
     execute_script
     exit 0
