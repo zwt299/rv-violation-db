@@ -23,6 +23,23 @@ function setup_all_props() {
     cd ~/
 }
 
+function setup_repo_and_test() {
+# Then Clone the Project that you are trying to work on
+    cd ~/javamop-agent-bundle/
+    git clone https://github.com/{$SLUG}
+    cd ~/javamop-agent-bundle/$TEST_DIR
+    git checkout $SHA
+    echo $TEST
+    if [ $TEST=="" ]; then 
+        mvn test -Denforcer.skip
+    else
+        mvn test -Dtest=${TEST} -Denforcer.skip
+    fi
+    
+    cp violation-counts ~/violations-data/violation-${VIO_ID}
+    cd ~/rv-violation-db/
+}
+
 function process() {
     if [$PROPFILE=""]; then
         setup_all_props
@@ -32,22 +49,6 @@ function process() {
     setup_repo_and_test
 }
 
-function setup_repo_and_test() {
-# Then Clone the Project that you are trying to work on
-    cd ~/javamop-agent-bundle/
-    git clone https://github.com/$SLUG
-    cd ~/javamop-agent-bundle/$TEST_DIR
-    git checkout $SHA
-    echo $TEST
-    if [$TEST==""]; then 
-        mvn test -Denforcer.skip
-    else
-        mvn test -Dtest=${TEST} -Denforcer.skip
-    fi
-    
-    cp violation-counts ~/violations-data/violation-${VIO_ID}
-    cd ~/rv-violation-db/
-}
 
 function process_vio_id() {
     VIO_ID=$1
@@ -61,8 +62,8 @@ function process_vio_id() {
     IFS=','
     #Read the split words into an array based on comma delimiter
     read -a strarr <<< "$REPO_INFO"
-    SLUG="${strarr[0]}"
-    SHA="${strarr[1]}"
+    SLUG="${strarr[1]}"
+    SHA="${strarr[2]}"
     echo $SLUG
     echo $SHA
     
