@@ -31,18 +31,18 @@ function setup_repo_and_test() {
     cd ~/javamop-agent-bundle/$TEST_DIR
     git checkout $SHA
     echo $TEST
-    if [ $TEST=="" ]; then 
-        mvn test -Denforcer.skip
-    else
-        mvn test -Dtest=${TEST} -Denforcer.skip
-    fi
+    # if [ $TEST=="" ]; then 
+    #     mvn test -Denforcer.skip
+    # else
+    mvn test -Dtest=${TEST} -Denforcer.skip
+    # fi
     
     cp violation-counts ~/violations-data/violation-${VIO_ID}
     cd ~/rv-violation-db/
 }
 
 function process() {
-    if [$PROPFILE=""]; then
+    if [ $PROPFILE=="" ]; then
         setup_all_props
     else
         setup_prop
