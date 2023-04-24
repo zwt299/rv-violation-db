@@ -6,6 +6,7 @@ GRANULARITY=$1
 GRANULARITY_VALUE=$2
 NUM_RERUNS=$3
 
+mkdir ~/violations-data/
 function execute_script() {
     source ~/.bashrc && cp /home/mopuser/rv-violation-db/extension/target/mop-extension-1.0-SNAPSHOT.jar ~/apache-maven/lib/ext
 
