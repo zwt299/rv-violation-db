@@ -40,7 +40,7 @@ function setup_repo_and_test() {
     
 
     #TODO: DO VALIDATION STEP HERE
-    cp violation-counts ~/violations-data/$SLUG-$SHA-$PROP-violation_$VIO_ID
+    cp violation-counts ~/violations-data/violation_$VIO_ID-$SHA-$PROPFILE
     #END TODO
     cd ~/rv-violation-db/
 }
