@@ -78,9 +78,7 @@ echo $IMAGE_NAME
 
 bash make_dockerfile_full.sh ${GRANULARITY} ${GRANULARITY_VALUE} ${NUM_RERUNS} ${IMAGE_NAME} ${CACHED}
 
-
-
-docker run -t --rm -v ${SCRIPT_DIR}:/Scratch ${IMAGE_NAME} /bin/bash -x /Scratch/run_entrypoint_full.sh &> repro-log.txt
+docker run -t --rm -v ${SCRIPT_DIR}:/Scratch ${IMAGE_NAME} /bin/bash -x /Scratch/run_entrypoint_full.sh ${GRANULARITY} ${GRANULARITY_VALUE} ${NUM_RERUNS} &> repro-log.txt
 exit 0
 
 # while [ "$1" != "" ]; do

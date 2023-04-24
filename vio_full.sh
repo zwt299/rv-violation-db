@@ -31,22 +31,27 @@ function setup_repo_and_test() {
     cd ~/javamop-agent-bundle/$TEST_DIR
     git checkout $SHA
     echo $TEST
+    #TODO -- test unspecified not working, need to debug
     # if [ $TEST=="" ]; then 
     #     mvn test -Denforcer.skip
     # else
     mvn test -Dtest=${TEST} -Denforcer.skip
     # fi
     
+
+    #TODO: DO VALIDATION STEP HERE
     cp violation-counts ~/violations-data/violation-${VIO_ID}
+    #END TODO
     cd ~/rv-violation-db/
 }
 
 function process() {
-    if [ $PROPFILE=="" ]; then
-        setup_all_props
-    else
-        setup_prop
-    fi  
+    #TODO: Prop unspecified not working, need to debug...
+    # if [ $PROPFILE=="" ]; then
+    #     setup_all_props
+    # else
+    setup_prop
+    # fi  
     setup_repo_and_test
 }
 
