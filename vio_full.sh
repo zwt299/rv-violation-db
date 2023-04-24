@@ -27,6 +27,7 @@ function setup_repo_and_test() {
 # Then Clone the Project that you are trying to work on
     cd ~/javamop-agent-bundle/
     git clone https://github.com/$SLUG
+    echo $TEST_DIR
     cd ~/javamop-agent-bundle/$TEST_DIR
     git checkout $SHA
     echo $TEST
