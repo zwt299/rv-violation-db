@@ -1,6 +1,11 @@
+#!/bin/bash 
 
 function setup_prop() {
+    # if [[ -z $PROPFILE ]]; then 
+    #     return
+    # fi
     ###HANDLE SPECIFIC AGENTS###
+    rm -rf ~/javamop-agent-bundle/props-to-use/
     mkdir ~/javamop-agent-bundle/props-to-use/
     cp ~/javamop-agent-bundle/props/${PROPFILE} ~/javamop-agent-bundle/props-to-use/
     cp ~/javamop-agent-bundle/props/Object_NoClone.mop ~/javamop-agent-bundle/props-to-use/
@@ -23,6 +28,31 @@ function setup_all_props() {
     cd ~/
 }
 
+function validate() {
+    for ((run=1;run<=$NUM_RERUNS;run++)); do
+        # find all matches for prop and check all of them 
+        vio_file="TODO"
+        line_num="TODO"
+
+        matches_vio_file=true
+        if [[ ! -z $VIO_FILE && $VIO_FILE != vio_file ]]; then 
+            matches_vio_file=false
+        fi
+
+        matches_line_num=true 
+        if [[ ! -z $LINE_NUM && $LINE_NUM != line_num ]]; then 
+            matches_line_num=false
+        fi
+
+        if [[ $matches_vio_file && $matches_line_num ]]; then 
+            (( NUM_VALIDATED++ ))
+            return
+        fi
+    done
+
+
+}
+
 function setup_repo_and_test() {
 # Then Clone the Project that you are trying to work on
     cd ~/javamop-agent-bundle/
@@ -31,32 +61,34 @@ function setup_repo_and_test() {
 
     repo_name=$(echo $SLUG | sed "s/^\S*[/]\(\S*\)[.]git$/\1/")
     cd ~/javamop-agent-bundle/$repo_name
+
     if [[ ! -z "$TEST_DIR" ]]; then 
         cd $TEST_DIR
     fi
     git checkout $SHA
-    echo $TEST
-    # TODO -- verify that test unspecified works
-    if [[ -z "$TEST" ]]; then 
-        mvn test -Denforcer.skip
-    else
-    mvn test -Dtest=${TEST} -Denforcer.skip
-    fi
-    
 
-    #TODO: DO VALIDATION STEP HERE
-    cp violation-counts ~/violations-data/violation_$VIO_ID-$SHA-$PROPFILE
-    #END TODO
+    echo $TEST
+    SLUG_ID=$(echo $SLUG | sed -e "s///'.'/g")
+    PROP=$(echo $PROPFILE | sed "s/.mop//")
+    for ((run=1;run<=$NUM_RERUNS;run++)); do
+        if [[ -z "$TEST" ]]; then 
+            mvn test -Denforcer.skip
+        else
+        mvn test -Dtest=${TEST} -Denforcer.skip
+        fi
+
+        mv violation-counts ~/violations-data/violation_$SLUG_ID-$PROP-$VIO_ID-$run
+    done
+
+    if [[ $VALIDATE="yes" ]]; then 
+        validate $slug_id $prop
+    fi 
+    
     cd ~/rv-violation-db/
 }
 
 function process() {
-    #TODO: Prop unspecified not working, need to debug...
-    # if [ $PROPFILE=="" ]; then
-    #     setup_all_props
-    # else
     setup_prop
-    # fi  
     setup_repo_and_test
 }
 
@@ -82,17 +114,25 @@ function process_vio_id() {
     PROPFILE="${strarr[1]}"
     TEST_DIR="${strarr[2]}"
     TEST="${strarr[3]}"
+    VIO_FILE="${strarr[4]}"
+    LINE_NUM="${strarr[5]}"
     echo $PROPFILE
     echo $TEST_DIR
     echo $TEST
+    echo $VIO_FILE
+    echo $LINE_NUM
 
+    # if [[ -z $PROPFILE ]]; then 
+    #     setup_all_props
+    # fi
     process 
 }
 
 GRANULARITY="all"
 GRANULARITY_VALUE=-1
 NUM_RERUNS=10
-
+VALIDATE="no"
+NUM_VALIDATED=0
 
 while [ "$1" != "" ]; do
     case $1 in
@@ -103,6 +143,7 @@ while [ "$1" != "" ]; do
         ;;
     --violation-id)
         shift
+        re='^[0-9]+$'
         if ! [[ $1 =~ $re ]] ; then
             echo "Error: violation-id not a number" >&2; exit 1
         fi
@@ -126,6 +167,9 @@ while [ "$1" != "" ]; do
         fi
         NUM_RERUNS=$1
         ;;
+    --validate)
+        shift 
+        VALIDATE="yes"
     esac
     shift
 done
@@ -133,6 +177,7 @@ done
 echo $GRANULARITY
 echo $GRANULARITY_VALUE
 echo $NUM_RERUNS
+echo $VALIDATE
 
 if [[ $GRANULARITY == "repo-slug" ]]; then
     REPO_SLUG=$GRANULARITY_VALUE
