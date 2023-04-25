@@ -1,5 +1,5 @@
 Violation_ID,Propfile,TestDirectory,Test,ViolationFile,LineNum,Classification,Notes
-1,Collection_UnsafeIterator.mop,./jetty-util,QueuedThreadPoolTest#testMaxStopTime,,,Truebug,N/A
+1,Collection_UnsafeIterator.mop,./jetty-util,QueuedThreadPoolTest#testMaxStopTime,./org/eclipse/jetty/util/thread/QueuedThreadPool,128,Truebug,N/A
 2,Collections_SynchronizedCollection.mop,./jetty-util,QueuedThreadPoolTest#testMaxStopTime,,,N/A,N/A
 3,Collection_HashCode.mop,,,./src/main/java/com/google/common/collect/RegularImmutableList.java,1,Falsealarm,N/A
 4,Iterator_HasNext.mop,,,./src/main/java/com/google/common/collect/SingletonImmutableSet.java,99,Falsealarm,N/A
