@@ -59,6 +59,7 @@ do
   fi
 
   base_test_file=$(basename $test_path)
+  vio_filename=$(echo $test_path | sed 's/:[0-9]*//')
   linenum=$(echo $base_test_file | sed 's/^.*.java:\([0-9]*\)$/\1/')
   repo_name=$(echo $proj_url | sed 's/^.*[/]\(\S*\).git$/\1/')
 
@@ -66,7 +67,7 @@ do
   echo "$NEXT_VIO_ID,$slug,$SHA,N/A" >> $REPO_DATA
 
   #Violation_ID, Propfile, TestDirectory, Test, ViolationFile, LineNum, Classification, Notes
-  echo "$NEXT_VIO_ID,$prop.mop,,,$test_path,$linenum,$classification,N/A" >> $VIOLATION_SPEC_MAP
+  echo "$NEXT_VIO_ID,$prop.mop,,,$vio_filename,$linenum,$classification,N/A" >> $VIOLATION_SPEC_MAP
 
   (( NEXT_VIO_ID++ ))
 
