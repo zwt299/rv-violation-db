@@ -28,15 +28,20 @@ function setup_repo_and_test() {
     cd ~/javamop-agent-bundle/
     git clone https://github.com/$SLUG
     echo $TEST
-    cd ~/javamop-agent-bundle/$TEST_DIR
+
+    repo_name=$(echo $SLUG | sed "s/^\S*[/]\(\S*\)[.]git$/\1/")
+    cd ~/javamop-agent-bundle/$repo_name
+    if [[ ! -z "$TEST_DIR" ]]; then 
+        cd $TEST_DIR
+    fi
     git checkout $SHA
     echo $TEST
-    #TODO -- test unspecified not working, need to debug
-    # if [ $TEST=="" ]; then 
-    #     mvn test -Denforcer.skip
-    # else
+    # TODO -- verify that test unspecified works
+    if [[ -z "$TEST" ]]; then 
+        mvn test -Denforcer.skip
+    else
     mvn test -Dtest=${TEST} -Denforcer.skip
-    # fi
+    fi
     
 
     #TODO: DO VALIDATION STEP HERE
