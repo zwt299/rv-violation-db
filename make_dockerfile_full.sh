@@ -22,5 +22,5 @@ if [[ CACHED == "no" ]]; then
     exit 0
 fi
 
-docker build --no-cache --build-arg GRANULARITY=$GRANULARITY --build-arg GRANULARITY_VALUE=$GRANULARITY_VALUE --build-arg NUM_RERUNS=$NUM_RERUNS -t ${IMAGE_NAME} -< javamopEnvFull 
+docker build --build-arg GRANULARITY=$GRANULARITY --build-arg GRANULARITY_VALUE=$GRANULARITY_VALUE --build-arg NUM_RERUNS=$NUM_RERUNS -t ${IMAGE_NAME} -< javamopEnvFull 
 exit 0
