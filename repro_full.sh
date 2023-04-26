@@ -14,6 +14,7 @@ GRANULARITY="all"
 GRANULARITY_VALUE=-1
 NUM_RERUNS=10
 CACHED="yes"
+VALIDATE="no"
 
 while [ "$1" != "" ]; do
     case $1 in
@@ -54,6 +55,9 @@ while [ "$1" != "" ]; do
     --no-cache)
         CACHED="no"
         ;;
+    --validate)
+        VALIDATE="yes"
+        ;;
     --usage)
         usage
         exit 1
@@ -76,9 +80,22 @@ echo $GRANULARITY_VALUE
 echo $NUM_RERUNS
 echo $IMAGE_NAME
 
-bash make_dockerfile_full.sh ${GRANULARITY} ${GRANULARITY_VALUE} ${NUM_RERUNS} ${IMAGE_NAME} ${CACHED}
+bash make_dockerfile_full.sh ${GRANULARITY} ${GRANULARITY_VALUE} ${NUM_RERUNS} ${IMAGE_NAME} ${CACHED} ${VALIDATE}
 
 docker run -t --rm -v ${SCRIPT_DIR}:/Scratch ${IMAGE_NAME} /bin/bash -x /Scratch/run_entrypoint_full.sh ${GRANULARITY} ${GRANULARITY_VALUE} ${NUM_RERUNS} &> repro-log.txt
+
+CONTAINER_ID=$(docker ps --filter "ancestor=$IMAGE_NAME" -q)
+CONTAINER_ROOT=$(docker exec $CONTAINTER_ID pwd)
+VIOLATIONS_DATA=./violations-data
+
+if ! [[ -d "$VIOLATIONS_DATA" ]]; then 
+    mkdir $VIOLATIONS_DATA
+fi
+cd $VIOLATIONS_DATA
+mkdir $IMAGE_NAME
+
+docker cp $CONTAINER_ID:$CONTAINER_ROOT/violations-data ./$IMAGE_NAME
+
 exit 0
 
 # while [ "$1" != "" ]; do
