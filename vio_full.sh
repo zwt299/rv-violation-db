@@ -31,8 +31,7 @@ function validate() {
     echo "Beginning validation for violation $VIO_ID for specification $PROP (slug = $SLUG)."
 
     for ((run=1;run<=$NUM_RERUNS;run++)); do
-        violations=$(cat ~/violations-data/violation_$SLUG_ID-$PROP-$VIO_ID-$run | grep -w -E "^[1-9]+ Specification .*\.html")
-        
+        violations=$(cat ~/violations-data/violation-id-4/violation_$SLUG_ID.git-$PROP-$VIO_ID-$run | grep -w -E "^[0-9]+ Specification .*\.html")
         while read violation; do 
             # find all matches for prop and check all of them 
             prop="$(echo $violation | 
@@ -46,7 +45,7 @@ function validate() {
             sed "s/^.* has been violated on line \(\S*\)\.\S*(.*\.html$/\1/" | 
             sed "s/\./\//g")
             matches_vio_file_suffix="true"
-            if ! [[ "$VIO_FILE" = "" || "$VIO_FILE" =~ ^.*$vio_file_suffix$ ]]; then 
+            if ! [[ "$VIO_FILE" = "" || "$VIO_FILE" =~ ^.*$vio_file_suffix\.java$ ]]; then 
                 matches_vio_file_suffix="false"
             fi
 
@@ -57,14 +56,14 @@ function validate() {
                 matches_line_num="false"
             fi
 
-            #echo $prop
-            #echo $matches_prop
-            #echo $vio_file_suffix 
-            #echo $VIO_FILE
-            #echo $matches_vio_file_suffix 
-            #echo $LINE_NUM
-            #echo $line_num
-            #echo $matches_line_num
+            # echo $prop
+            # echo $matches_prop
+            # echo $vio_file_suffix 
+            # echo $VIO_FILE
+            # echo $matches_vio_file_suffix 
+            # echo $LINE_NUM
+            # echo $line_num
+            # echo $matches_line_num
 
             if [[ $matches_prop = "true" && $matches_vio_file_suffix = "true" && $matches_line_num = "true" ]]; then 
                 echo -e "Validation successful.\n"
@@ -97,9 +96,7 @@ function output_validation_summary(){
         summary+="# of reruns: $NUM_RERUNS\n"
         summary+="# of validated violations: $NUM_VALIDATED\n"
 
-        num_invalid_vios=$(( $(echo $INVALID_VIO_INFO | wc -l) - 1))
-        echo $INVALID_VIO_INFO
-        echo $num_invalid_vios
+        num_invalid_vios=$(echo $INVALID_VIO_INFO | wc -l)
         summary+="# of violations not validated: $num_invalid_vios\n"
         if (( $num_invalid_vios > 0 )); then 
                 summary+="Violations not validated (violation id, repo slug, propfile)"
@@ -123,21 +120,20 @@ function setup_repo_and_test() {
     fi
     git checkout $SHA
 
-    echo $TEST
     SLUG_ID=$(echo $SLUG | sed "s/.git//" | sed "s/\//./g")
-    SLUG_ID=$(echo $SLUG  | sed "s/\//./g")
     PROP=$(echo $PROPFILE | sed "s/.mop//")
+    echo $SLUG_ID
     for ((run=1;run<=$NUM_RERUNS;run++)); do
         if [[ -z "$TEST" ]]; then 
             mvn test -Denforcer.skip
         else
         mvn test -Dtest=${TEST} -Denforcer.skip
         fi
-
+ 
         mv violation-counts ~/violations-data/violation_$SLUG_ID-$PROP-$VIO_ID-$run
     done
 
-    if [[ $VALIDATE="yes" ]]; then 
+    if [[ "$VALIDATE" = "yes" ]]; then 
         validate
     fi 
     
@@ -251,8 +247,8 @@ fi
 
 if [[ $GRANULARITY == "violation-id" ]]; then
     VIO_ID=$GRANULARITY_VALUE
-    result=$(grep -w -E "$VIO_ID,\S+,\S+,\S+" ~/rv-violation-db/data/repo-data.csv)
-    echo $result
+    result=$(grep -w -E "$VIO_ID,\S+,\S+,\S+" ./data/repo-data.csv)
+    # result=$(grep -w -E "$VIO_ID,\S+,\S+,\S+" ~/rv-violation-db/data/repo-data.csv)
     IFS=','
     #Read the split words into an array based on comma delimiter
     while read -a line; do 
