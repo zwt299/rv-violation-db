@@ -87,7 +87,7 @@ function validate() {
     fi
 
     echo -e "$failed_validation_msg\n"
-    echo $failed_validation_msg >> $VALIDATE_LOG_FILE
+    echo -e $failed_validation_msg >> $VALIDATE_LOG_FILE
     INVALID_VIO_INFO+="$VIO_ID,$SLUG,$PROPFILE\n"
 }
 
@@ -236,7 +236,6 @@ echo $VALIDATE
 if [[ $GRANULARITY == "repo-slug" ]]; then
     REPO_SLUG=$GRANULARITY_VALUE
     result=$(grep -w -E "\S+,$REPO_SLUG,\S+,\S+" ~/rv-violation-db/data/repo-data.csv)
-    
     IFS=','
     #Read the split words into an array based on comma delimiter
     while read -a line; do 
@@ -247,8 +246,7 @@ fi
 
 if [[ $GRANULARITY == "violation-id" ]]; then
     VIO_ID=$GRANULARITY_VALUE
-    result=$(grep -w -E "$VIO_ID,\S+,\S+,\S+" ./data/repo-data.csv)
-    # result=$(grep -w -E "$VIO_ID,\S+,\S+,\S+" ~/rv-violation-db/data/repo-data.csv)
+    result=$(grep -w -E "$VIO_ID,\S+,\S+,\S+" ~/rv-violation-db/data/repo-data.csv)
     IFS=','
     #Read the split words into an array based on comma delimiter
     while read -a line; do 
