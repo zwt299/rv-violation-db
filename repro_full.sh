@@ -82,19 +82,28 @@ echo $IMAGE_NAME
 
 bash make_dockerfile_full.sh ${GRANULARITY} ${GRANULARITY_VALUE} ${NUM_RERUNS} ${IMAGE_NAME} ${CACHED} ${VALIDATE}
 
-docker run -t --rm -v ${SCRIPT_DIR}:/Scratch ${IMAGE_NAME} /bin/bash -x /Scratch/run_entrypoint_full.sh ${GRANULARITY} ${GRANULARITY_VALUE} ${NUM_RERUNS} &> repro-log.txt
+docker run -t -v ${SCRIPT_DIR}:/Scratch ${IMAGE_NAME} /bin/bash -x /Scratch/run_entrypoint_full.sh ${GRANULARITY} ${GRANULARITY_VALUE} ${NUM_RERUNS} ${VALIDATE} &> repro-log.txt
+CONTAINER_ID=$(docker ps -a --filter "ancestor=$IMAGE_NAME" -q | head -1)
+echo $CONTAINER_ID
 
-CONTAINER_ID=$(docker ps --filter "ancestor=$IMAGE_NAME" -q)
-CONTAINER_ROOT=$(docker exec $CONTAINTER_ID pwd)
-VIOLATIONS_DATA=./violations-data
+docker start $CONTAINER_ID
 
-if ! [[ -d "$VIOLATIONS_DATA" ]]; then 
+CONTAINER_ROOT=$(docker exec $CONTAINER_ID pwd)
+
+VIOLATIONS_DATA=$SCRIPT_DIR/violations-data
+
+if ! [[ -d $VIOLATIONS_DATA ]]; then 
     mkdir $VIOLATIONS_DATA
 fi
-cd $VIOLATIONS_DATA
-mkdir $IMAGE_NAME
 
-docker cp $CONTAINER_ID:$CONTAINER_ROOT/violations-data ./$IMAGE_NAME
+IMAGE_VIOLATIONS=$VIOLATIONS_DATA/$IMAGE_NAME
+if ! [[ -d $IMAGE_VIOLATIONS ]]; then 
+    mkdir $IMAGE_VIOLATIONS
+fi
+rm -rf $IMAGE_VIOLATIONS/*
+
+docker cp "$CONTAINER_ID:$CONTAINER_ROOT/$VIOLATIONS_DATA/" "$SCRIPT_DIR/$VIOLATIONS_DATA/$IMAGE_NAME"
+docker stop $CONTAINER_ID
 
 exit 0
 

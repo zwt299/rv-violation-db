@@ -18,7 +18,10 @@ IMAGE_NAME=$4
 CACHED=$5
 VALIDATE=$6
 
-if [[ CACHED == "no" ]]; then 
+echo $CACHED 
+echo $VALIDATE
+
+if [[ $CACHED == "no" ]]; then 
     docker build --no-cache --build-arg GRANULARITY=$GRANULARITY --build-arg GRANULARITY_VALUE=$GRANULARITY_VALUE --build-arg NUM_RERUNS=$NUM_RERUNS --build-arg VALIDATE=$VALIDATE -t ${IMAGE_NAME} -< javamopEnvFull 
     exit 0
 fi

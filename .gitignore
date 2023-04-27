@@ -1,4 +1,5 @@
 repos/*
 javaparser
 *log.txt
+violations-data/*
 2016-violations/2016_repos
