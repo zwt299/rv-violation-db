@@ -13,8 +13,10 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 GRANULARITY="all"
 GRANULARITY_VALUE=-1
 NUM_RERUNS=10
-CACHED="yes"
 VALIDATE="no"
+CACHED="yes"
+# always different on each run -- will bust git cache for git cache step
+GIT_CACHE_BUST=$(date +%s)
 
 while [ "$1" != "" ]; do
     case $1 in
@@ -52,11 +54,14 @@ while [ "$1" != "" ]; do
         shift
         IMAGE_NAME=$1
         ;;
+    --validate)
+        VALIDATE="yes"
+        ;;
     --no-cache)
         CACHED="no"
         ;;
-    --validate)
-        VALIDATE="yes"
+    --use-cached-repos)
+        GIT_CACHE_BUST="no"
         ;;
     --usage)
         usage
@@ -79,8 +84,9 @@ echo $GRANULARITY
 echo $GRANULARITY_VALUE
 echo $NUM_RERUNS
 echo $IMAGE_NAME
+echo $GIT_CACHE_BUST
 
-bash make_dockerfile_full.sh ${GRANULARITY} ${GRANULARITY_VALUE} ${NUM_RERUNS} ${IMAGE_NAME} ${CACHED} ${VALIDATE}
+bash make_dockerfile_full.sh ${GRANULARITY} ${GRANULARITY_VALUE} ${NUM_RERUNS} ${IMAGE_NAME} ${VALIDATE} ${CACHED} ${GIT_CACHE_BUST}
 
 docker run -t -v ${SCRIPT_DIR}:/Scratch ${IMAGE_NAME} /bin/bash -x /Scratch/run_entrypoint_full.sh ${GRANULARITY} ${GRANULARITY_VALUE} ${NUM_RERUNS} ${VALIDATE} &> repro-log.txt
 CONTAINER_ID=$(docker ps -a --filter "ancestor=$IMAGE_NAME" -q | head -1)

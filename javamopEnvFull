@@ -3,6 +3,7 @@ FROM ubuntu:18.04
 ARG GRANULARITY
 ARG GRANULARITY_VALUE
 ARG NUM_RERUNS
+ARG VALIDATE
 
 RUN \
   apt-get update && \
@@ -53,10 +54,15 @@ RUN \
   cd /home/mopuser && \
   cd javamop/ && bash scripts/install-javaparser.sh && \
   cd /home/mopuser && \
-  cd javamop/ && /home/mopuser/apache-maven/bin/mvn install -DskipTests && \
+  cd javamop/ && /home/mopuser/apache-maven/bin/mvn install -DskipTests
+
+
+ARG GIT_CACHE_BUST
+RUN \
+  # Clone rv-violations repo
   cd /home/mopuser && \
   git clone https://github.com/zwt299/rv-violation-db.git && \
-# Set up the user's configurations
+  # Set up the user's configurations
   tail -n +10 ~/.bashrc > ~/tmp-bashrc && \
   cp ~/tmp-bashrc ~/.bashrc && \
   echo 'JAVAHOME=/usr/lib/jvm/java-8-openjdk' >> ~/.bashrc && \
@@ -66,11 +72,11 @@ RUN \
   echo 'ASPECTJ_DIR=${HOME}/aspectj1.8' >> ~/.bashrc && \
   echo 'export PATH=${M2_HOME}/bin:${JAVAHOME}/bin:${ASPECTJ_DIR}/bin:${ASPECTJ_DIR}/lib/aspectjweaver.jar:${HOME}/javamop/javamop/bin:${HOME}/javamop/rv-monitor/bin:${HOME}/javamop/rv-monitor/target/release/rv-monitor/lib/rv-monitor-rt.jar:${HOME}/javamop/rv-monitor/target/release/rv-monitor/lib/rv-monitor.jar:${PATH}' >> ~/.bashrc && \
   echo 'export CLASSPATH=${ASPECTJ_DIR}/lib/aspectjtools.jar:${ASPECTJ_DIR}/lib/aspectjrt.jar:${ASPECTJ_DIR}/lib/aspectjweaver.jar:${HOME}/javamop/rv-monitor/target/release/rv-monitor/lib/rv-monitor-rt.jar:${HOME}/javamop/rv-monitor/target/release/rv-monitor/lib/rv-monitor.jar:${CLASSPATH}' >> ~/.bashrc && \
-# Fetch the script that makes JavaMOP Java Agents and the files that it needs
+  # Fetch the script that makes JavaMOP Java Agents and the files that it needs
   wget https://www.cs.cornell.edu/courses/cs6156/2020fa/resources/javamop-agent-bundle.tgz && \
   tar xf javamop-agent-bundle.tgz && rm javamop-agent-bundle.tgz && \
   echo '===============Building a JavaMOP Java agent===========' && \
   echo 'In the image: ${HOME}/javamop-agent-bundle/README.txt' && \
   echo '======================================================='
 
-RUN ["/bin/bash", "-c", "source ~/.bashrc && cp /home/mopuser/rv-violation-db/extension/target/mop-extension-1.0-SNAPSHOT.jar ~/apache-maven/lib/ext && ls ~/apache-maven/lib/ext && bash /home/mopuser/rv-violation-db/run_entrypoint_full.sh ${GRANULARITY} ${GRANULARITY_VALUE} ${NUM_RERUNS}"] 
+RUN ["/bin/bash", "-c", "source ~/.bashrc && cp /home/mopuser/rv-violation-db/extension/target/mop-extension-1.0-SNAPSHOT.jar ~/apache-maven/lib/ext && ls ~/apache-maven/lib/ext && bash /home/mopuser/rv-violation-db/run_entrypoint_full.sh ${GRANULARITY} ${GRANULARITY_VALUE} ${NUM_RERUNS} ${VALIDATE}"] 
