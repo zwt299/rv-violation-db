@@ -31,7 +31,7 @@ function validate() {
     echo "Beginning validation for violation $VIO_ID for specification $PROP (slug = $SLUG)."
 
     for ((run=1;run<=$NUM_RERUNS;run++)); do
-        violations=$(cat ~/violations-data/violation-id-4/violation_$SLUG_ID.git-$PROP-$VIO_ID-$run | grep -w -E "^[0-9]+ Specification .*\.html")
+        violations=$(cat ~/violations-data/violation_$SLUG_ID-$PROP-$VIO_ID-$run | grep -w -E "^[0-9]+ Specification .*\.html")
         while read violation; do 
             # find all matches for prop and check all of them 
             prop="$(echo $violation | 

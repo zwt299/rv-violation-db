@@ -3,7 +3,6 @@ FROM ubuntu:18.04
 ARG GRANULARITY
 ARG GRANULARITY_VALUE
 ARG NUM_RERUNS
-ARG VALIDATE
 
 RUN \
   apt-get update && \
@@ -79,4 +78,4 @@ RUN \
   echo 'In the image: ${HOME}/javamop-agent-bundle/README.txt' && \
   echo '======================================================='
 
-RUN ["/bin/bash", "-c", "source ~/.bashrc && cp /home/mopuser/rv-violation-db/extension/target/mop-extension-1.0-SNAPSHOT.jar ~/apache-maven/lib/ext && ls ~/apache-maven/lib/ext && bash /home/mopuser/rv-violation-db/run_entrypoint_full.sh ${GRANULARITY} ${GRANULARITY_VALUE} ${NUM_RERUNS} ${VALIDATE}"] 
+RUN ["/bin/bash", "-c", "source ~/.bashrc && cp /home/mopuser/rv-violation-db/extension/target/mop-extension-1.0-SNAPSHOT.jar ~/apache-maven/lib/ext && ls ~/apache-maven/lib/ext && bash /home/mopuser/rv-violation-db/run_entrypoint_full.sh ${GRANULARITY} ${GRANULARITY_VALUE} ${NUM_RERUNS}"] 
