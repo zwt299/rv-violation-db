@@ -8,4 +8,4 @@
 
 3 - Populate Dataset
 
-4 - (maybe) write script to remove violations that cannot be validated
+4 - change vio script to validate after each run 

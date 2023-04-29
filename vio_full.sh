@@ -15,23 +15,12 @@ function setup_prop() {
     cd ~/
 }
 
-# function setup_all_props() {
-#     bash ~/javamop-agent-bundle/make-agent.sh ~/javamop-agent-bundle/props ~/javamop-agent-bundle/agents/ quiet
-
-#     cd ~/javamop-agent-bundle/
-#     ###INSTALL JAVAMOPAGENT.JAR
-#     mvn install:install-file -Dfile=agents/JavaMOPAgent.jar -DgroupId="javamop-agent" -DartifactId="javamop-agent" -Dversion="1.0" -Dpackaging="jar"
-#     export RVMLOGGINGLEVEL=UNIQUE
-#     cd ~/
-# }
-
 function validate() {
     PROP_MATCHES=""
 
     echo "Beginning validation for violation $VIO_ID for specification $PROP (slug = $SLUG)."
 
-    for ((run=1;run<=$NUM_RERUNS;run++)); do
-        violations=$(cat ~/violations-data/violation_$SLUG_ID-$PROP-$VIO_ID-$run | grep -w -E "^[0-9]+ Specification .*\.html")
+        violations=$(cat ~/violations-data/violation_$SLUG_ID-$PROP-$VIO_ID$RUN_SUFFIX | grep -w -E "^[0-9]+ Specification .*\.html")
         while read violation; do 
             # find all matches for prop and check all of them 
             prop="$(echo $violation | 
@@ -66,9 +55,11 @@ function validate() {
             # echo $matches_line_num
 
             if [[ $matches_prop = "true" && $matches_vio_file_suffix = "true" && $matches_line_num = "true" ]]; then 
+                VALIDATED="true"
+
                 echo -e "Validation successful.\n"
                 echo -e "Validated: violation ID $VIO_ID, $SLUG, $PROPFILE\n" >> $VALIDATE_LOG_FILE
-                (( NUM_VALIDATED++ ))
+                (( $NUM_VALIDATED++ ))
                 return
             fi
 
@@ -77,7 +68,6 @@ function validate() {
                 PROP_MATCHES+="\trun $run: $violation\n"
             fi
         done <<< $violations
-    done
     
     failed_validation_msg="Violation ID $VIO_ID, $SLUG: "
     if [[ $PROP_MATCHES = "" ]]; then 
@@ -99,7 +89,7 @@ function output_validation_summary(){
         num_invalid_vios=$(echo $INVALID_VIO_INFO | wc -l)
         summary+="# of violations not validated: $num_invalid_vios\n"
         if (( $num_invalid_vios > 0 )); then 
-                summary+="Violations not validated (violation id, repo slug, propfile)"
+                summary+="Violations not validated (violation id, repo slug, propfile):\n"
                 summary+="$INVALID_VIO_INFO"
         fi
 
@@ -122,21 +112,35 @@ function setup_repo_and_test() {
 
     SLUG_ID=$(echo $SLUG | sed "s/.git//" | sed "s/\//./g")
     PROP=$(echo $PROPFILE | sed "s/.mop//")
-    echo $SLUG_ID
+    VALIDATED="false"
     for ((run=1;run<=$NUM_RERUNS;run++)); do
         if [[ -z "$TEST" ]]; then 
             mvn test -Denforcer.skip
         else
-        mvn test -Dtest=${TEST} -Denforcer.skip
+                mvn test -Dtest=${TEST} -Denforcer.skip
         fi
- 
-        mv violation-counts ~/violations-data/violation_$SLUG_ID-$PROP-$VIO_ID-$run
+
+        if [[ $NUM_RERUNS = 1 ]]; then 
+                RUN_SUFFIX=""
+        else
+                RUN_SUFFIX="-$run"
+        fi
+
+        if [[ -f violation-counts ]]; then 
+            mv violation-counts ~/violations-data/violation_$SLUG_ID-$PROP-$VIO_ID$RUN_SUFFIX
+        else 
+            echo "" > ~/violations-data/violation_$SLUG_ID-$PROP-$VIO_ID$RUN_SUFFIX
+        fi
+
+        if [[ "$VALIDATE" = "yes" ]]; then 
+                validate
+
+                if [[ "$RUN_ALL" = "no" && "$VALIDATED" = "true" ]]; then
+                        break
+                fi
+        fi 
     done
 
-    if [[ "$VALIDATE" = "yes" ]]; then 
-        validate
-    fi 
-    
     cd ~/rv-violation-db/
 }
 
@@ -180,9 +184,10 @@ function process_vio_id() {
 
 GRANULARITY="all"
 GRANULARITY_VALUE=-1
-NUM_RERUNS=10
+NUM_RERUNS=1
+RUN_ALL="no"
 
-VALIDATE="no"
+VALIDATE="yes"
 VALIDATE_LOG_FILE=~/violations-data/validate_full_log.txt
 VALIDATE_SUMMARY_FILE=~/violations-data/validate_summary.txt
 NUM_VALIDATED=0
@@ -221,9 +226,14 @@ while [ "$1" != "" ]; do
         fi
         NUM_RERUNS=$1
         ;;
-    --validate)
+    --no-validate)
         shift 
-        VALIDATE="yes"
+        VALIDATE="no"
+        ;;
+    --run-all)
+        shift 
+        RUN_ALL="yes"
+        ;;
     esac
     shift
 done
