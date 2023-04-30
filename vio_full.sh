@@ -28,9 +28,12 @@ function validate() {
                 matches_prop="false"
             fi
 
+            vio_file_name=$(echo violation |
+            sed "s/^.*has been violated on line \S*(\(\S*\).java:[0-9]*)\..*$/\1/")
             vio_file_suffix=$(echo $violation | 
-            sed "s/^.* has been violated on line \(\S*\)\.\S*(.*\.html$/\1/" | 
-            sed "s/\./\//g")
+            sed "s/^.* has been violated on line \(\S*\)\.[^\.]*(.*\.html$/\1/"
+            sed "s/\./\//g" 
+            )
             matches_vio_file_suffix="true"
             if ! [[ "$VIO_FILE" = "" || "$VIO_FILE" =~ ^.*$vio_file_suffix\.java$ ]]; then 
                 matches_vio_file_suffix="false"
@@ -59,6 +62,8 @@ function validate() {
                 echo -e "Validated: violation ID $VIO_ID, $SLUG, $PROPFILE\n" >> $VALIDATE_LOG_FILE
                 (( $NUM_VALIDATED++ ))
                 return
+            else 
+                echo "Validation failed."
             fi
 
             # record violations that match prop but differ in other aspects
