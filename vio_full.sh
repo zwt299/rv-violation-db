@@ -16,8 +16,6 @@ function setup_prop() {
 }
 
 function validate() {
-    PROP_MATCHES=""
-
     echo "Beginning validation for violation $VIO_ID for specification $PROP (slug = $SLUG)."
 
         violations=$(cat ~/violations-data/violation_$SLUG_ID-$PROP-$VIO_ID$RUN_SUFFIX | grep -w -E "^[0-9]+ Specification .*\.html")
@@ -68,17 +66,6 @@ function validate() {
                 PROP_MATCHES+="\trun $run: $violation\n"
             fi
         done <<< $violations
-    
-    failed_validation_msg="Violation ID $VIO_ID, $SLUG: "
-    if [[ $PROP_MATCHES = "" ]]; then 
-        failed_validation_msg+="No violation matching specification $PROPFILE was observed after $NUM_RERUNS runs."
-    else 
-        failed_validation_msg+="No violations were produced that match both violation filename and line number after $NUM_RERUNS runs, but violations were observed that violate the specification $PROPFILE:\n\n$PROP_MATCHES"
-    fi
-
-    echo -e "$failed_validation_msg\n"
-    echo -e $failed_validation_msg >> $VALIDATE_LOG_FILE
-    INVALID_VIO_INFO+="$VIO_ID,$SLUG,$PROPFILE\n"
 }
 
 function output_validation_summary(){
@@ -112,7 +99,9 @@ function setup_repo_and_test() {
 
     SLUG_ID=$(echo $SLUG | sed "s/.git//" | sed "s/\//./g")
     PROP=$(echo $PROPFILE | sed "s/.mop//")
+
     VALIDATED="false"
+    PROP_MATCHES=""
     for ((run=1;run<=$NUM_RERUNS;run++)); do
         if [[ -z "$TEST" ]]; then 
             mvn test -Denforcer.skip
@@ -141,6 +130,19 @@ function setup_repo_and_test() {
         fi 
     done
 
+    if [[ "$VALIDATED" = "false" ]]; then 
+        failed_validation_msg="Violation ID $VIO_ID, $SLUG: "
+        if [[ $PROP_MATCHES = "" ]]; then 
+            failed_validation_msg+="No violation matching specification $PROPFILE was observed after $NUM_RERUNS runs."
+        else 
+            failed_validation_msg+="No violations were produced that match both violation filename $VIO_FILE and line number $LINE_NUM after $NUM_RERUNS runs, but violations were observed that violate the specification $PROPFILE:\n\n$PROP_MATCHES"
+        fi
+
+        echo -e "$failed_validation_msg\n"
+        echo -e $failed_validation_msg >> $VALIDATE_LOG_FILE
+        INVALID_VIO_INFO+="$VIO_ID,$SLUG,$PROPFILE\n"
+    fi
+    
     cd ~/rv-violation-db/
 }
 
@@ -251,7 +253,6 @@ if [[ $GRANULARITY == "repo-slug" ]]; then
     while read -a line; do 
         process_vio_id "${line[0]}"
     done <<< "$result"
-    exit 0
 fi
 
 if [[ $GRANULARITY == "violation-id" ]]; then

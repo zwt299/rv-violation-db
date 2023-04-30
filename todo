@@ -8,4 +8,4 @@
 
 3 - Populate Dataset
 
-4 - change vio script to validate after each run 
+4 - fix vio summary to correctly count validated and not validated violations
