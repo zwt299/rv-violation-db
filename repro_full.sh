@@ -73,7 +73,7 @@ done
 
 
 if [[ $IMAGE_NAME == "" ]]; then
-    IMAGE_NAME=$GRANULARITY-$GRANULARITY_VALUE
+    IMAGE_NAME=$(echo $GRANULARITY-$GRANULARITY_VALUE | sed "s/\//./g" | awk '{print tolower($0)}')
 
     if [ $GRANULARITY == "all" ]; then
         IMAGE_NAME="all-violations"
