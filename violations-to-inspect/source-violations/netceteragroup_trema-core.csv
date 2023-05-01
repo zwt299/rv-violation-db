@@ -38,7 +38,7 @@ com.netcetera.trema.core.exporting.HtmlLineBreakConverterTest#shouldReplaceWindo
 com.netcetera.trema.core.XSDValidationTest#testNoXsdProvided,
 com.netcetera.trema.core.exporting.HtmlLineBreakConverterTest#shouldLeaveTextWithoutNewlineUntouched,
 com.netcetera.trema.core.exporting.JsonExporterTest#shouldExportValidEmptyJsonForNonExistingLanguage,
-com.netcetera.trema.core.exporting.JsonExporterTest#shouldThrowExportOxceptionUponIOExceptionOnClosingStream,Closeable_MultipleClose@com.netcetera.trema.core.exporting.JsonExporter.export(JsonExporter.java:105),OutputStream_ManipulateAfterClose@com.netcetera.trema.core.exporting.JsonExporter.export(JsonExporter.java:104)
+com.netcetera.trema.core.exporting.JsonExporterTest#shouldThrowExportOxceptionUponIOExceptionOnClosingStream,OutputStream_ManipulateAfterClose@com.netcetera.trema.core.exporting.JsonExporter.export(JsonExporter.java:104),Closeable_MultipleClose@com.netcetera.trema.core.exporting.JsonExporter.export(JsonExporter.java:105)
 com.netcetera.trema.core.XSDValidationTest#testXSDValidation3,
 com.netcetera.trema.core.importing.ChangesAnalyzerTest#testAnalyzeMasterLanguageImportSource,
 com.netcetera.trema.core.importing.CSVFileTest#testInvalidRows,
