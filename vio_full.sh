@@ -18,8 +18,9 @@ function setup_prop() {
 function validate() {
     echo "Beginning validation for violation $VIO_ID for specification $PROP (slug = $SLUG)."
 
+        IFS=$'\n'
         violations=$(cat ~/violations-data/violation_$SLUG_ID-$PROP-$VIO_ID$RUN_SUFFIX | grep -w -E "^[0-9]+ Specification .*\.html")
-        while read violation; do 
+        while read -r violation; do 
             # find all matches for prop and check all of them 
             prop="$(echo $violation | 
             sed "s/^[1-9][0-9]* Specification \(\S*\) .*\.html$/\1/").mop"
@@ -28,10 +29,10 @@ function validate() {
                 matches_prop="false"
             fi
 
-            vio_file_name=$(echo violation |
-            sed "s/^.*has been violated on line \S*(\(\S*\).java:[0-9]*)\..*$/\1/")
+#            vio_file_name=$(echo $violation |
+#            sed "s/^.* has been violated on line \S*(\(\S*\).java:[0-9]*)\..*$/\1/")
             vio_file_suffix=$(echo $violation | 
-            sed "s/^.* has been violated on line \(\S*\)\.[^\.]*(.*\.html$/\1/"
+            sed "s/^.* has been violated on line \(\S*\)\.[^\.]*(.*\.html$/\1/" |
             sed "s/\./\//g" 
             )
             matches_vio_file_suffix="true"
@@ -46,31 +47,31 @@ function validate() {
                 matches_line_num="false"
             fi
 
-            # echo $prop
-            # echo $matches_prop
-            # echo $vio_file_suffix 
-            # echo $VIO_FILE
-            # echo $matches_vio_file_suffix 
-            # echo $LINE_NUM
-            # echo $line_num
-            # echo $matches_line_num
-
+#             echo $prop
+#             echo $matches_prop
+#             echo $vio_file_suffix 
+#             echo $VIO_FILE
+#             echo $matches_vio_file_suffix
+#             echo $LINE_NUM
+#             echo $line_num
+#             echo $matches_line_num
+#
             if [[ $matches_prop = "true" && $matches_vio_file_suffix = "true" && $matches_line_num = "true" ]]; then 
                 VALIDATED="true"
 
-                echo -e "Validation successful.\n"
-                echo -e "Validated: violation ID $VIO_ID, $SLUG, $PROPFILE\n" >> $VALIDATE_LOG_FILE
-                (( $NUM_VALIDATED++ ))
+                echo "Validation successful."
+                echo "Validated: violation ID $VIO_ID, $SLUG, $PROPFILE" >> $VALIDATE_LOG_FILE
+                NUM_VALIDATED=$((NUM_VALIDATED + 1))
                 return
-            else 
-                echo "Validation failed."
             fi
 
             # record violations that match prop but differ in other aspects
             if [[ $matches_prop = "true" ]]; then 
                 PROP_MATCHES+="\trun $run: $violation\n"
             fi
-        done <<< $violations
+    done < <(cat ~/violations-data/violation_$SLUG_ID-$PROP-$VIO_ID$RUN_SUFFIX | grep -w "^[1-9][0-9]* Specification .*\.html")
+
+    echo "Validation failed."
 }
 
 function output_validation_summary(){
@@ -78,7 +79,7 @@ function output_validation_summary(){
         summary+="# of reruns: $NUM_RERUNS\n"
         summary+="# of validated violations: $NUM_VALIDATED\n"
 
-        num_invalid_vios=$(echo $INVALID_VIO_INFO | wc -l)
+        num_invalid_vios=$(( $(echo $INVALID_VIO_INFO | wc -l) - 1 )) 
         summary+="# of violations not validated: $num_invalid_vios\n"
         if (( $num_invalid_vios > 0 )); then 
                 summary+="Violations not validated (violation id, repo slug, propfile):\n"
@@ -128,6 +129,7 @@ function setup_repo_and_test() {
 
         if [[ "$VALIDATE" = "yes" ]]; then 
                 validate
+                IFS=","
 
                 if [[ "$RUN_ALL" = "no" && "$VALIDATED" = "true" ]]; then
                         break
@@ -249,6 +251,8 @@ echo $GRANULARITY
 echo $GRANULARITY_VALUE
 echo $NUM_RERUNS
 echo $VALIDATE
+
+echo "VALIDATE FULL LOG" > $VALIDATE_LOG_FILE
 
 if [[ $GRANULARITY == "repo-slug" ]]; then
     REPO_SLUG=$GRANULARITY_VALUE
