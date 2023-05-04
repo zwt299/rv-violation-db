@@ -48,5 +48,7 @@ https://github.com/fernandezpablo85/scribe-java f69dbb249e56b560aecc4fb789e4421c
 https://github.com/kbss-cvut/jb4jsonld-jackson.git 73c15a2e861c26272cbc2b6b1d335b75d8ca9426 kbss-cvut_jb4jsonld-jackson
 https://github.com/netceteragroup/trema-core.git b0bdb76d8bdf06454f5645452f5e4e9156cfae0b netceteragroup_trema-core
 https://github.com/mguymon/model-citizen b5217a12b7a9292877b56942893bec67326247a3 mguymon.model-citizen
-https://github.com/mitre/HTTP-Proxy-Servlet 531709323746f4a3a281a7c76875096bef560b3a mitre.HTTP-Proxy-Servlet
 https://github.com/phax/ph-ebinterface 4624c76a4a07ddef5dad3f870f2b2d4c484cc72d phax.ph-ebinterface
+https://github.com/microfocus-idol/java-configuration-impl 1e13e552fac467fb9ca3ce2b2ed5a3d037052cf4 microfocus-idol.java-configuration-impl
+https://github.com/mojohaus/jaxb2-maven-plugin 4334522409c9f92e262d6479b1bf8448713d8152 mojohaus.jaxb2-maven-plugin
+https://github.com/valfirst/jbehave-junit-runner f263f28eb209bff2038f827a85f4744fec1c3b80 valfirst.jbehave-junit-runner

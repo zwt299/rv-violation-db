@@ -9,15 +9,34 @@ Because this project is designed to be a replicable database, it is important to
 Users should have some version of Docker Desktop installed.
 
 ### How to Get Started
-To setup your environment for inspecting projects there are a few steps required on the user's end.
 
-Below are instructions while running in a Linux Shell.
+Below are instructions while running in a Linux Shell:
 
-Run the following commands to start the docker environment: 
-1. Start the docker service (`service docker start`)
-2. `docker build --no-cache -t rv-db:latest -< javamopEnv`
-3. `docker run -it rv-db:latest`
+`bash repro_full.sh <options>`
+
+If no selection options are specified, all violations will be run.
 
 
+optional flags:
+
+`--repo-slug <SLUG>` run all violations associated with repo slug `SLUG`
+
+`--violation-id <ID>` run all violations associated with violation ID `ID`
+
+`--prop-file <PROP>` run all violations associated with JavaMOP property `PROP`
+
+`--all` run all violations
 
 
+`--num-reruns <NUM>` maximum number of times to rerun the test associated with each violation during validation (if --no-validate is specified, 
+each violation test will be run `NUM` times).
+
+`--no-validate` disables validation step (on by default)
+
+
+`--image-name <NAME>` create a Docker image with name `NAME` (default: `<SELECTION-FLAG>-<SELECTION-OPTION>`, i.e. "violation-id-4")
+
+`--no-cache` disables caching during Docker image build (Docker environment will be completely rebuilt)
+
+
+`--usage` display usage information
