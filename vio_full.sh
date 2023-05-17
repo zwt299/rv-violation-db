@@ -93,8 +93,8 @@ function output_validation_summary(){
                 summary+="$INVALID_VIO_INFO"
         fi
 
-        echo -e "$summary" > "$VALIDATE_SUMMARY_FILE"
-        echo -e "$VALIDATE_LOG_MESSAGE" > "$VALIDATE_LOG_FILE"
+        echo -e "$summary" > $VALIDATE_SUMMARY_FILE
+        echo -e "$VALIDATE_LOG_MESSAGE" > $VALIDATE_LOG_FILE
 }
 
 function setup_repo_and_test() {
