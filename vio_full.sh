@@ -60,7 +60,9 @@ function validate() {
                 VALIDATED="true"
 
                 echo "Validation successful."
-                echo "Validated: violation ID $VIO_ID, $SLUG, $PROPFILE" >> $VALIDATE_LOG_FILE
+                echo "Validated: violation ID $VIO_ID, $SLUG, $PROPFILE"
+                VALIDATE_LOG_MESSAGE+="Validated: violation ID $VIO_ID, $SLUG, $PROPFILE\n"
+
                 NUM_VALIDATED=$((NUM_VALIDATED + 1))
                 VALID_VIO_INFO+="$VIO_ID,$SLUG,$PROPFILE\n"
                 return
@@ -91,7 +93,8 @@ function output_validation_summary(){
                 summary+="$INVALID_VIO_INFO"
         fi
 
-        echo -e $summary > $VALIDATE_SUMMARY_FILE
+        echo -e "$summary" > "$VALIDATE_SUMMARY_FILE"
+        echo -e "$VALIDATE_LOG_MESSAGE" > "$VALIDATE_LOG_FILE"
 }
 
 function setup_repo_and_test() {
@@ -151,7 +154,8 @@ function setup_repo_and_test() {
         fi
 
         echo -e "$failed_validation_msg\n"
-        echo -e $failed_validation_msg >> $VALIDATE_LOG_FILE
+        VALIDATE_LOG_MESSAGE+="$failed_validation_msg\n"
+
         NUM_NOT_VALIDATED=$((NUM_NOT_VALIDATED + 1))
         INVALID_VIO_INFO+="$VIO_ID,$SLUG,$PROPFILE\n"
     fi
@@ -204,6 +208,8 @@ RUN_ALL="no"
 
 VALIDATE="yes"
 VALIDATE_LOG_FILE=~/violations-data/validate_full_log.txt
+VALIDATE_LOG_MESSAGE=""
+
 VALIDATE_SUMMARY_FILE=~/violations-data/validate_summary.txt
 NUM_VALIDATED=0
 VALID_VIO_INFO=""
@@ -259,8 +265,6 @@ echo $GRANULARITY
 echo $GRANULARITY_VALUE
 echo $NUM_RERUNS
 echo $VALIDATE
-
-echo "VALIDATE FULL LOG" > $VALIDATE_LOG_FILE
 
 if [[ $GRANULARITY == "repo-slug" ]]; then
     REPO_SLUG=$GRANULARITY_VALUE
