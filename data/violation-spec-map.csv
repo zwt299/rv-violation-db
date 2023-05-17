@@ -1,6 +1,6 @@
 Violation_ID,Propfile,TestDirectory,Test,ViolationFile,LineNum,Classification,Notes
 1,Collection_UnsafeIterator.mop,./jetty-util,QueuedThreadPoolTest#testMaxStopTime,./org/eclipse/jetty/util/thread/QueuedThreadPool.java,128,Truebug,N/A
-2,Collections_SynchronizedCollection.mop,./jetty-util,QueuedThreadPoolTest#testMaxStopTime,,,N/A,N/A
+2,FSM162.mop,,,./src/main/java/de/strullerbaumann/visualee/examiner/Examiner.java,144,Truebug,This is a test for custom mop files
 3,Collection_HashCode.mop,,,./src/main/java/com/google/common/collect/RegularImmutableList.java,1,Falsealarm,N/A
 4,Iterator_HasNext.mop,,,./src/main/java/com/google/common/collect/SingletonImmutableSet.java,99,Falsealarm,N/A
 5,Iterator_HasNext.mop,,,./src/main/java/org/apache/lucene/search/BooleanQuery.java,297,Falsealarm,N/A

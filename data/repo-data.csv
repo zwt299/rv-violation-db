@@ -1,6 +1,6 @@
 Violation_ID,Project_SLUG,SHA,Notes
 1,eclipse/jetty.project.git,df1f709ea2f883ffb7f0a87d63aac506ae3fedd5,N/A
-2,eclipse/jetty.project.git,df1f709ea2f883ffb7f0a87d63aac506ae3fedd5,N/A
+2,Thomas-S-B/visualee.git,410a80f0f4774b093c3689d0e0c75bc46c78688e,Test for custom spec files
 3,Cue/lucene-interval-fields.git,8f8bff6d0011df7d6efad65e37d4b14ca9fea010,N/A
 4,Cue/lucene-interval-fields.git,8f8bff6d0011df7d6efad65e37d4b14ca9fea010,N/A
 5,Cue/lucene-interval-fields.git,8f8bff6d0011df7d6efad65e37d4b14ca9fea010,N/A
