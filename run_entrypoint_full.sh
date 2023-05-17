@@ -15,7 +15,7 @@ fi
 mkdir ~/violations-data/
 function execute_script() {
     source ~/.bashrc && cp /home/mopuser/rv-violation-db/extension/target/mop-extension-1.0-SNAPSHOT.jar ~/apache-maven/lib/ext
-
+    cp -r /home/mopuser/rv-violation-db/custom-specifications/* /home/mopuser/javamop-agent-bundle/
     bash $script_to_run
 }
 
