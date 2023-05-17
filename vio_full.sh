@@ -62,6 +62,7 @@ function validate() {
                 echo "Validation successful."
                 echo "Validated: violation ID $VIO_ID, $SLUG, $PROPFILE" >> $VALIDATE_LOG_FILE
                 NUM_VALIDATED=$((NUM_VALIDATED + 1))
+                VALID_VIO_INFO+="$VIO_ID,$SLUG,$PROPFILE\n"
                 return
             fi
 
@@ -77,11 +78,15 @@ function validate() {
 function output_validation_summary(){
         summary="VALIDATION_SUMMARY\n"
         summary+="# of reruns: $NUM_RERUNS\n"
-        summary+="# of validated violations: $NUM_VALIDATED\n"
 
-        num_invalid_vios=$(( $(echo $INVALID_VIO_INFO | wc -l) - 1 )) 
-        summary+="# of violations not validated: $num_invalid_vios\n"
-        if (( $num_invalid_vios > 0 )); then 
+        summary+="# of validated violations: $NUM_VALIDATED\n"
+        if (( $NUM_VALIDATED > 0 )); then 
+                summary+="Violations validated (violation id, repo slug, propfile):\n"
+                summary+="$VALID_VIO_INFO"
+        fi
+
+        summary+="# of violations not validated: $NUM_NOT_VALIDATED\n"
+        if (( $NUM_NOT_VALIDATED > 0 )); then 
                 summary+="Violations not validated (violation id, repo slug, propfile):\n"
                 summary+="$INVALID_VIO_INFO"
         fi
@@ -147,6 +152,7 @@ function setup_repo_and_test() {
 
         echo -e "$failed_validation_msg\n"
         echo -e $failed_validation_msg >> $VALIDATE_LOG_FILE
+        NUM_NOT_VALIDATED=$((NUM_NOT_VALIDATED + 1))
         INVALID_VIO_INFO+="$VIO_ID,$SLUG,$PROPFILE\n"
     fi
     
@@ -200,6 +206,8 @@ VALIDATE="yes"
 VALIDATE_LOG_FILE=~/violations-data/validate_full_log.txt
 VALIDATE_SUMMARY_FILE=~/violations-data/validate_summary.txt
 NUM_VALIDATED=0
+VALID_VIO_INFO=""
+NUM_NOT_VALIDATED=0
 INVALID_VIO_INFO=""
 
 while [ "$1" != "" ]; do
