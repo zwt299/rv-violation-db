@@ -12,6 +12,12 @@ if [[ "$VALIDATE" = "yes" ]]; then
     VALIDATION_FLAG="--validate"
 fi
 
+#Logic for unzipping repos and m2 files
+tar -xzvf repos.tar.gz
+tar -xzvf m2files.tar.gz
+mv -r repos/* ~/javamop-agent-bundle/
+mv -r m2files/* ~/.m2/repository/
+
 mkdir ~/violations-data/
 function execute_script() {
     source ~/.bashrc && cp /home/mopuser/rv-violation-db/extension/target/mop-extension-1.0-SNAPSHOT.jar ~/apache-maven/lib/ext

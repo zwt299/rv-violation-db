@@ -100,7 +100,7 @@ function output_validation_summary(){
 function setup_repo_and_test() {
 # Then Clone the Project that you are trying to work on
     cd ~/javamop-agent-bundle/
-    git clone https://github.com/$SLUG
+    # git clone https://github.com/$SLUG
     echo $TEST
 
     repo_name=$(echo $SLUG | sed "s/^\S*[/]\(\S*\)[.]git$/\1/")
