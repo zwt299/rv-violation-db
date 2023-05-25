@@ -24,9 +24,9 @@ echo $VALIDATE
 echo $GIT_CACHE_BUST
 
 if [[ $CACHED == "no" ]]; then 
-    docker build --no-cache --build-arg GRANULARITY=$GRANULARITY --build-arg GRANULARITY_VALUE=$GRANULARITY_VALUE --build-arg NUM_RERUNS=$NUM_RERUNS --build-arg GIT_CACHE_BUST=$GIT_CACHE_BUST -t ${IMAGE_NAME} -< javamopEnvFull &> build_log.txt
+    docker build --no-cache --build-arg GRANULARITY=$GRANULARITY --build-arg GRANULARITY_VALUE=$GRANULARITY_VALUE --build-arg NUM_RERUNS=$NUM_RERUNS --build-arg GIT_CACHE_BUST=$GIT_CACHE_BUST -t ${IMAGE_NAME} -< javamopEnvFull 
     exit 0
 fi
 
-docker build --build-arg GRANULARITY=$GRANULARITY --build-arg GRANULARITY_VALUE=$GRANULARITY_VALUE --build-arg NUM_RERUNS=$NUM_RERUNS --build-arg GIT_CACHE_BUST=$GIT_CACHE_BUST -t ${IMAGE_NAME} -< javamopEnvFull &> build_log.txt
+docker build --build-arg GRANULARITY=$GRANULARITY --build-arg GRANULARITY_VALUE=$GRANULARITY_VALUE --build-arg NUM_RERUNS=$NUM_RERUNS --build-arg GIT_CACHE_BUST=$GIT_CACHE_BUST -t ${IMAGE_NAME} -< javamopEnvFull
 exit 0
